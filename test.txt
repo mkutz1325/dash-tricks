@@ -1,4 +1,4 @@
-this is a test
+Have you been able to access this repository?
 
 Michael: yes
 Xiaotao: no
