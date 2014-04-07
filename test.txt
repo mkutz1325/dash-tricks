@@ -4,3 +4,4 @@ Michael: yes
 Xiaotao: no
 Hadiza: yes
 Jian: no
+Bryan: yes
