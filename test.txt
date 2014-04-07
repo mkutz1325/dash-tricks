@@ -3,4 +3,9 @@ Have you been able to access this repository?
 Michael: yes
 Xiaotao: no
 Hadiza: yes
+<<<<<<< HEAD
 Jian: no
+=======
+Jian: yes
+Bryan: yes
+>>>>>>> 1287708f822e382f936059ae1212ea9dcae9c97c
