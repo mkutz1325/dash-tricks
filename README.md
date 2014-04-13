@@ -22,12 +22,13 @@ This should include:
 6.  What is your work plan.
 
 We need to talk about the use cases of the app, including:
-  Viewing Refrigerator capacity / Usage / Status
-  Monitoring Refrigerator Status (temp)
-  Viewing Immunization Coverage
-  Monitoring Vaccine Stocks / Stock levels / Stock out
-  Viewing Reporting times, missing data
-  Saving Charts to make reports
+
+- Viewing Refrigerator capacity / Usage / Status
+- Monitoring Refrigerator Status (temp)
+- Viewing Immunization Coverage
+- Monitoring Vaccine Stocks / Stock levels / Stock out
+- Viewing Reporting times, missing data
+- Saving Charts to make reports
 
 We should also have a data model sketch for Wednesday, possibly based on the PATH_DataModel document in the TanzaniaApp folder.
 
