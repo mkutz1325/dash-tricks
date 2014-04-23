@@ -8,25 +8,23 @@
     }
 
     .innerpath {
-      fill: red;
-    }
-
-    .warning.valuepath {
-      fill: red;
+      fill: blue;
     }
 
     .valuepath {
       fill: blue;
     }
 
+    .warning {
+      fill: red;
+    }
+
     .label_value {
-      font-size: 7em;
       font-family: sans-serif;
       dominant-baseline: central;
     }
 
     .label_name {
-      font-size: 5em;
       font-family: sans-serif;
     }
 
@@ -55,10 +53,11 @@ BCG,37
     var margin = {top: 30, right: 30, bottom: 30, left: 30},
         width = windowWidth - margin.left - margin.right,
         height = windowHeight - margin.top - margin.bottom,
-        outerR = height/2.3,
+        radiusCalc = Math.min(height, width), 
+        outerR = radiusCalc/2.3,
         innerR = outerR / 1.5,
-        heightOffset = -height/10,
-        nameOffset = height/1.5 + heightOffset;
+        heightOffset = -radiusCalc/10,
+        nameOffset = radiusCalc/1.5 + heightOffset;
 
     var data = d3.csv.parse(d3.select("#csvdata").html(), type);
 
@@ -92,9 +91,12 @@ BCG,37
     var total_label = center_group.append("svg:text")
         .attr("class", "label_value")
         .attr("text-anchor", "middle") // text-align: right
+        .attr("font-size", radiusCalc * .18 + "px")
         .text(function(d) { return d.value + "%"; });
 
-
+    function warning (d) {
+      return (d.value < 50 ? "warning " : "");
+    }
 
     //Group for arcs
     var arc_group = chart.append("svg:g")
@@ -119,18 +121,19 @@ BCG,37
           .outerRadius(innerR - 10);
     arc_group.append("svg:path")
         .attr("d", inner_arc)
-        .attr("class", "innerpath");
+        .attr("class", function(d) { return warning(d) + "innerpath";});
 
 
     paths.enter().append("svg:path")
         .attr("d", v_arc)
-        .attr("class", function(d) { return (d.value < 50 ? "warning " : "") + "valuepath"});
+        .attr("class", function(d) { return warning(d) + "valuepath"});
 
     var name_label = chart.append("svg:text")
         .attr("class", "label_name")
         .attr("text-anchor", "middle") // text-align: right
         .attr("transform", "translate(" + (width/2) + "," + (height/2 + heightOffset) + ")")
         .attr("dy", nameOffset)
+        .attr("font-size", radiusCalc * .1 + "px")
         .text(function(d) { return d.name;});
 
 
