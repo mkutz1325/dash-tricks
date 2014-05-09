@@ -62,6 +62,7 @@
 
   var projection = d3.geo.equirectangular()
       .scale(4500)
+      .center([34.82798686462619, -6.2673993761146924])
       .translate([width / 2, height / 2]);
   
   var path = d3.geo.path()
@@ -106,24 +107,24 @@
     console.log(path.bounds(d));
   }
 
-  d3.json("tza.json", function(error, tza) {
+  var tza = JSON.parse(android.getData());
 
-    console.log(tza);
+  console.log(tza);
 
-    // set the center to the centroid
-    projection.center(projection.invert(path.centroid(topojson.feature(tza, tza.objects.TZA_adm0_subunits).features[0])))
+  // set the center to the centroid
+  // projection.center(projection.invert(path.centroid(topojson.feature(tza, tza.objects.TZA_adm0_subunits).features[0])))
 
-    g.selectAll("path")
-      .data(topojson.feature(tza, tza.objects.TZA_adm2_subunits).features)
-    .enter().append("path")
-      .attr("d", path)
-      .attr("class", "feature")
-      .on("click", clicked);
+  g.selectAll("path")
+    .data(topojson.feature(tza, tza.objects.TZA_adm2_subunits).features)
+  .enter().append("path")
+    .attr("d", path)
+    .attr("class", "feature")
+    .on("click", clicked);
 
-    g.append("path")
-      .datum(topojson.mesh(tza, tza.objects.TZA_adm2_subunits, function(a, b) { return a !== b; }))
-      .attr("class", "mesh")
-      .attr("d", path);
+  g.append("path")
+    .datum(topojson.mesh(tza, tza.objects.TZA_adm2_subunits, function(a, b) { return a !== b; }))
+    .attr("class", "mesh")
+    .attr("d", path);
 
     // svg.append("g")
     //     .attr("class", "adm0")
@@ -133,24 +134,23 @@
     //     .attr("d", path)
     //   .on("click", click);
 
-  });
 
   function clicked(d) {
-    if (active.node() === this) return reset();
-    active.classed("active", false);
-    active = d3.select(this).classed("active", true);
+    // if (active.node() === this) return reset();
+    // active.classed("active", false);
+    // active = d3.select(this).classed("active", true);
 
-    var bounds = path.bounds(d),
-        dx = bounds[1][0] - bounds[0][0],
-        dy = bounds[1][1] - bounds[0][1],
-        x = (bounds[0][0] + bounds[1][0]) / 2,
-        y = (bounds[0][1] + bounds[1][1]) / 2,
-        scale = .9 / Math.max(dx / width, dy / height),
-        translate = [width / 2 - scale * x, height / 2 - scale * y];
+    // var bounds = path.bounds(d),
+    //     dx = bounds[1][0] - bounds[0][0],
+    //     dy = bounds[1][1] - bounds[0][1],
+    //     x = (bounds[0][0] + bounds[1][0]) / 2,
+    //     y = (bounds[0][1] + bounds[1][1]) / 2,
+    //     scale = .9 / Math.max(dx / width, dy / height),
+    //     translate = [width / 2 - scale * x, height / 2 - scale * y];
 
-    svg.transition()
-        .duration(750)
-        .call(zoom.translate(translate).scale(scale).event);
+    // svg.transition()
+    //     .duration(750)
+    //     .call(zoom.translate(translate).scale(scale).event);
   }
 
   function reset() {
