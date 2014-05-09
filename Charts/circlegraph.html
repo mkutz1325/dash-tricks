@@ -45,9 +45,6 @@
   
   </head>
   <body>
-<data id="csvdata">name,value
-BCG,37
-</data>
   </body>
 
   <script>
@@ -64,7 +61,7 @@ BCG,37
         heightOffset = -radiusCalc/10,
         nameOffset = radiusCalc/1.5 + heightOffset;
 
-    var data = d3.csv.parse(d3.select("#csvdata").html(), type);
+    var data = JSON.parse(android.getData());
 
     var chart = d3.select(".chart")
           .attr("width", width + margin.left + margin.right)

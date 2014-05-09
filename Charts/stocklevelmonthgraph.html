@@ -51,14 +51,6 @@
   
   </head>
   <body>
-<data id="csvdata">name,recieved,end
-BCG,97,46
-OPV-0,50,20
-OPV-1,92,85
-Penta-1,82,43
-Rota-2,23,0
-Measles-1,83,73
-</data>
   </body>
 
   <script>
@@ -96,7 +88,7 @@ Measles-1,83,73
       return d;
     }
 
-    var data = d3.csv.parse(d3.select("#csvdata").html(), type);
+    var data = JSON.parse(android.getData());
 
     xscale.domain(data.map(function(d) { return d.name; }));
     yscale.domain([0, Math.max(d3.max(data, function(d) { return Math.max(d.recieved, d.end); }),110)]);
