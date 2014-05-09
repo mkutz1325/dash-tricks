@@ -15,17 +15,18 @@
       fill: blue;
     }
 
-    .warning {
-      fill: red;
-    }
-
     .label_value {
+      fill: blue;
       font-family: sans-serif;
       dominant-baseline: central;
     }
 
     .label_name {
       font-family: sans-serif;
+    }
+
+    .warning {
+      fill: red;
     }
 
     data {
@@ -89,7 +90,7 @@ BCG,37
       .data(data);
 
     var total_label = center_group.append("svg:text")
-        .attr("class", "label_value")
+        .attr("class", function(d) { return warning(d) + "label_value";})
         .attr("text-anchor", "middle") // text-align: right
         .attr("font-size", radiusCalc * .18 + "px")
         .text(function(d) { return d.value + "%"; });
