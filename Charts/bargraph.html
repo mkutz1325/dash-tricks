@@ -117,7 +117,7 @@ Measles-1,83
       return d;
     }
 
-    var data = android.getData();
+    var data = JSON.parse(android.getData());
 
     xscale.domain(data.map(function(d) { return d.name; }));
     yscale.domain([0, Math.max(d3.max(data, function(d) { return d.value; }),110)]);

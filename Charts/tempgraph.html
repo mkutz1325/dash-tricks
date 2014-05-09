@@ -123,7 +123,7 @@ December,5,max
       return d;
     }
 
-    var data = d3.csv.parse(d3.select("#csvdata").html(), type);
+    var data = JSON.parse(android.getData());
 
     xscale.domain(data.map(function(d) { return d.month; }));
     yscale.domain([Math.min(d3.min(data, function(d) { return d.value; }), 0), 
