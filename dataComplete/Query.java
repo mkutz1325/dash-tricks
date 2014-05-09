@@ -17,8 +17,6 @@ public class Query {
 	private final int YEAR = 2014;
 	private SQLiteDatabase database;
 	private DataBaseHelper dbHelper;
-	private String[] allColumns = {VaccineTable.ID, VaccineTable.NAME, VaccineTable.DOSE_NO, VaccineTable.DOSE_VILE,
-							VaccineTable.WASTED, VaccineTable.SPACE};
 	
 	public Query(Context context){
 		dbHelper = new DataBaseHelper(context);
