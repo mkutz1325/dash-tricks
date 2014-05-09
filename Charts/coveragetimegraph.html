@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+
+    body {
+      margin: 0px;
+    }
+
+    .bartext {
+      fill: white;
+      font: 14px sans-serif;
+    }
+
+    .axis text {
+      font: 14px sans-serif;
+    }
+
+    .line {
+      fill: none;
+      stroke-width: 1.5px;
+    }
+
+    .line.tranparent {
+      opacity: .18;
+    }
+
+    .classLine {
+      fill: none;
+      stroke: black;
+      stroke-dasharray: 5,15;
+      stroke-width: .5px;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+    }
+
+    data {
+      display: none;
+    }
+  </style>
+
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  
+  </head>
+  <body>
+<data id="csvdata">month,value,category
+January,0,BCG
+February,10,BCG
+March,15,BCG
+April,12,BCG
+May,13,BCG
+June,16,BCG
+July,9,BCG
+August,14,BCG
+September,16,BCG
+October,19,BCG
+November,17,BCG
+December,13,BCG
+January,5,Measles
+February,16,Measles
+March,17,Measles
+April,20,Measles
+May,18,Measles
+June,30,Measles
+July,17,Measles
+August,21,Measles
+September,18,Measles
+October,23,Measles
+November,24,Measles
+December,20,Measles
+January,23,Pneum
+February,35,Pneum
+March,36,Pneum
+April,30,Pneum
+May,34,Pneum
+June,39,Pneum
+July,32,Pneum
+August,33,Pneum
+September,37,Pneum
+October,40,Pneum
+November,38,Pneum
+December,35,Pneum
+January,43,Rota
+February,48,Rota
+March,45,Rota
+April,49,Rota
+May,43,Rota
+June,48,Rota
+July,51,Rota
+August,52,Rota
+September,46,Rota
+October,44,Rota
+November,45,Rota
+December,49,Rota
+January,58,Penta
+February,62,Penta
+March,60,Penta
+April,57,Penta
+May,54,Penta
+June,52,Penta
+July,57,Penta
+August,60,Penta
+September,58,Penta
+October,59,Penta
+November,54,Penta
+December,52,Penta
+January,67,OPV
+February,70,OPV
+March,75,OPV
+April,72,OPV
+May,65,OPV
+June,62,OPV
+July,68,OPV
+August,69,OPV
+September,73,OPV
+October,69,OPV
+November,73,OPV
+December,72,OPV
+</data>
+  </body>
+
+  <script>
+
+    // set window to fill screen
+    var windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var windowHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+
+    var margin = {top: 20, right: 30, bottom: 30, left: 50},
+        width = windowWidth - margin.left - margin.right,
+        height = windowHeight - margin.top - margin.bottom;
+
+    var xscale = d3.scale.ordinal()
+      .rangePoints([0, width], .1);
+
+    var yscale = d3.scale.linear()
+      .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+      .scale(xscale)
+      .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+      .scale(yscale)
+      .orient("left");
+
+    var highlight = "Rota";
+
+    var svg = d3.select("body").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    function type(d) {
+      d.value = +d.value; // coerce to number
+      return d;
+    }
+
+    var data = d3.csv.parse(d3.select("#csvdata").html(), type);
+
+    xscale.domain(data.map(function(d) { return d.month; }));
+    yscale.domain([Math.min(d3.min(data, function(d) { return d.value; }), 0), 
+                    Math.max(d3.max(data, function(d) { return d.value; }),10)]);
+
+    function pointX (d) {
+      return xscale(d.month) + xscale.rangeBand() / 2;
+    }
+
+    function pointY (d) {
+      return yscale(d.value);
+    }
+
+    var line = d3.svg.line()
+                  .x(pointX)
+                  .y(pointY);
+
+    var categoryLine = d3.svg.line()
+                        .x(function (d) { return d.x })
+                        .y(function (d) { return d.y });
+
+    // put the axis on
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+    // put the classifier on
+    var badUpperLimit = 50;
+    svg.append("path")
+      .attr("class", "classLine")
+      .attr("d", categoryLine([
+        {
+          x: 0, 
+          y: yscale(badUpperLimit)
+        },
+        {
+          x: xscale.range()[xscale.range().length-1],
+          y: yscale(badUpperLimit)
+        }
+        ]));
+
+
+    // nest data by category
+    var categories = d3.nest()
+      .key(function(d) { return d.category; })
+      .entries(data);
+
+    var g = svg.selectAll()
+      .data(categories)
+    .enter().append("g")
+      .attr("class", "category")
+      .attr("type", function(d) {
+        return d.key;
+      });
+
+    // set color for each category
+    var colorScale = d3.scale.category10();
+    
+
+    // draw path for each category
+    g.each(function(d, i) {
+      var e = d3.select(this);
+
+      e.append("path")
+          .attr("class", function(d) { return d.key == highlight ? "line" : "line tranparent"; })
+          .attr("stroke", colorScale(i))
+          .attr("d", function(d) { return line(d.values); });
+    });
+    
+
+
+  </script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
