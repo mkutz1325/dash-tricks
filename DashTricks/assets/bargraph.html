@@ -2,17 +2,16 @@
 <html>
   <head>
   <style>
-
-    body {
-      margin: 0px;
+  
+  	body {
+  	  border: solid 1px black;
+  	}
+    .bar {
+      fill: steelblue;
     }
 
-    .bar.recieved {
-      fill: DeepSkyBlue;
-    }
-
-    .bar.end {
-      fill: blue;
+    .bar.warning {
+      fill: IndianRed;
     }
 
     .bartext {
@@ -31,11 +30,7 @@
       shape-rendering: crispEdges;
     }
 
-    .x.axis line {
-      display: none;
-    }
-
-    .xmarks.axis text, .xmarks.axis path {
+    .x.axis path {
       display: none;
     }
 
@@ -51,6 +46,14 @@
   
   </head>
   <body>
+<data id="csvdata">name,value
+BCG,97
+OPV-0,50
+OPV-1,92
+Penta-1,82
+Rota-2,23
+Measles-1,83
+</data>
   </body>
 
   <script>
@@ -83,15 +86,17 @@
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     function type(d) {
-      d.recieved = +d.recieved; // coerce to number
-      d.end = +d.end
+      d.value = +d.value; // coerce to number
       return d;
     }
 
-    var data = JSON.parse(android.getData());
+    var data = d3.csv.parse(d3.select("#csvdata").html(), type);
+    //var data = android.getData();
+    
+    //document.write(JSON.stringify(data));
 
     xscale.domain(data.map(function(d) { return d.name; }));
-    yscale.domain([0, Math.max(d3.max(data, function(d) { return Math.max(d.recieved, d.end); }),110)]);
+    yscale.domain([0, Math.max(d3.max(data, function(d) { return d.value; }),110)]);
 
     chart.append("g")
       .attr("class", "x axis")
@@ -102,44 +107,28 @@
       .attr("class", "y axis")
       .call(yAxis);
 
-    var xmarksScale = d3.scale.ordinal()
-          .rangePoints([0, width], .1)
-          .domain(d3.range(0,data.length + 1));
-
-    var xmarks = d3.svg.axis()
-        .scale(xmarksScale)
-        .orient("top")
-        .tickSize(10)
-        .ticks(data.length);
-
-    chart.append("g")
-      .attr("class", "xmarks axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xmarks);
-
-    
-
     chart.selectAll(".bar")
         .data(data)
       .enter().append("g").each( function(d) {
-        var recievedHeightVal = height - yscale(d.recieved);
-        var endHeightVal = height - yscale(d.end);
-        var widthVal = xscale.rangeBand() / 2;
+        var xVal = xscale(d.name);
+        var yVal = yscale(d.value);
+        var heightVal = height - yscale(d.value);
+        var widthVal = xscale.rangeBand();
         d3.select(this).append("rect")
-          .attr("class", "bar recieved")
-          .attr("x", xscale(d.name))
-          .attr("y", yscale(d.recieved))
-          .attr("height", recievedHeightVal)
-          .attr("width", widthVal);
-        d3.select(this).append("rect")
-          .attr("class", "bar end")
-          .attr("x", xscale(d.name) + widthVal)
-          .attr("y", yscale(d.end))
-          .attr("height", endHeightVal)
-          .attr("width", widthVal);
+          .attr("class", function(d) { return d.value > 80 ? "bar" : "bar warning"})
+          .attr("x", xVal)
+          .attr("y", yVal)
+          .attr("height", heightVal)
+          .attr("width", widthVal)
+        d3.select(this).append("text")
+          .attr("class", "bartext")
+          .attr("x", xVal + widthVal / 2)
+          .attr("y", yVal)
+          .attr("dx", "-.5em")
+          .attr("dy", "1em")
+          .text(function(d) { return d.value.toString() + "%"; });
       });
 
-      
     
 
   </script>

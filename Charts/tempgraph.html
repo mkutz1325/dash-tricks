@@ -2,6 +2,11 @@
 <html>
   <head>
   <style>
+
+    body {
+      margin: 0px;
+    }
+
     .point {
       fill: steelblue;
     }
@@ -52,32 +57,6 @@
   
   </head>
   <body>
-<data id="csvdata">month,value,category
-January,2,min
-February,3,min
-March,3,min
-April,3,min
-May,4,min
-June,2,min
-July,1,min
-August,2,min
-September,2,min
-October,3,min
-November,2,min
-December,3,min
-January,8,max
-February,7,max
-March,8,max
-April,5,max
-May,6,max
-June,7,max
-July,6,max
-August,8,max
-September,8,max
-October,6,max
-November,7,max
-December,5,max
-</data>
   </body>
 
   <script>
@@ -118,7 +97,7 @@ December,5,max
       return d;
     }
 
-    var data = d3.csv.parse(d3.select("#csvdata").html(), type);
+    var data = JSON.parse(android.getData());
 
     xscale.domain(data.map(function(d) { return d.month; }));
     yscale.domain([Math.min(d3.min(data, function(d) { return d.value; }), 0), 

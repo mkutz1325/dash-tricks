@@ -3,6 +3,10 @@
   <head>
   <style>
 
+    body {
+      margin: 0px;
+    }
+
     .bartext {
       fill: white;
       font: 14px sans-serif;
@@ -44,32 +48,6 @@
   
   </head>
   <body>
-<data id="csvdata">month,value,category
-January,2000,recieved
-February,2100,recieved
-March,0,recieved
-April,3000,recieved
-May,2100,recieved
-June,1000,recieved
-July,900,recieved
-August,4900,recieved
-September,3500,recieved
-October,300,recieved
-November,3800,recieved
-December,1500,recieved
-January,500,end
-February,2000,end
-March,1000,end
-April,300,end
-May,800,end
-June,1500,end
-July,900,end
-August,3000,end
-September,1000,end
-October,0,end
-November,2500,end
-December,800,end
-</data>
   </body>
 
   <script>
@@ -107,7 +85,7 @@ December,800,end
       return d;
     }
 
-    var data = d3.csv.parse(d3.select("#csvdata").html(), type);
+    var data = JSON.parse(android.getData());
 
     xscale.domain(data.map(function(d) { return d.month; }));
     yscale.domain([Math.min(d3.min(data, function(d) { return d.value; }), 0), 
