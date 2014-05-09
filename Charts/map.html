@@ -3,20 +3,25 @@
   <head>
   <style>
 
-    data {
-      display: none;
+    .background {
+      fill: none;
+      pointer-events: all;
     }
 
-    svg {
-      background: Khaki;
+    .feature {
+      fill: #ccc;
+      cursor: pointer;
     }
 
-    .adm0 {
-      fill: #222;
-    }
-
-    .adm0 :hover {
+    .feature.active {
       fill: orange;
+    }
+
+    .mesh {
+      fill: none;
+      stroke: #fff;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
   </style>
@@ -26,33 +31,49 @@
   
   </head>
   <body>
-<data id="csvdata">name,value
-Locke,4
-Reyes,8
-Ford,15
-Jarrah,16
-Shephard,23
-Kwon,42
-</data>
   </body>
 
   <script>
 
+  // mostly taken from http://bl.ocks.org/mbostock/9656675
+
   var width = 960,
     height = 960;
+    active = d3.select(null);
+
+  // var svg = d3.select("body").append("svg")
+  //     .attr("width", width)
+  //     .attr("height", height);
 
   var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .on("click", stopped, true);
+
+  svg.append("rect")
+      .attr("class", "background")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .on("click", reset);
 
   var projection = d3.geo.equirectangular()
-      .center([35, -5.8])
-      .rotate([0, 0])
       .scale(4500)
       .translate([width / 2, height / 2]);
-
+  
   var path = d3.geo.path()
       .projection(projection);
+
+  var zoom = d3.behavior.zoom()
+    .translate([0, 0])
+    .scale(1)
+    .scaleExtent([1, 8])
+    .on("zoom", zoomed);
+
+  var g = svg.append("g");
+
+  svg
+    .call(zoom) // delete this line to disable free zooming
+    .call(zoom.event);
 
   // d3.json("mx.json", function(error, mx) {
   //   svg.append("g")
@@ -75,18 +96,87 @@ Kwon,42
   //       .attr("d", path);
   // });
 
+  function click(d) {
+    console.log(d.properties.NAME_0 + " " + d.properties.NAME_1);
+    console.log(projection.invert(path.centroid(d)));
+    console.log(path.bounds(d));
+  }
+
   d3.json("tza.json", function(error, tza) {
 
     console.log(tza);
 
-    svg.append("g")
-        .attr("class", "adm0")
-      .selectAll("path")
-        .data(topojson.feature(tza, tza.objects.TZA_adm3_subunits).features)
-      .enter().append("path")
-        .attr("d", path)
-      .append("title")
-        .text(function(d) { return d.properties.name; });
+    // set the center to the centroid
+    projection.center(projection.invert(path.centroid(topojson.feature(tza, tza.objects.TZA_adm0_subunits).features[0])))
+
+    g.selectAll("path")
+      .data(topojson.feature(tza, tza.objects.TZA_adm1_subunits).features)
+    .enter().append("path")
+      .attr("d", path)
+      .attr("class", "feature")
+      .on("click", clicked);
+
+    g.append("path")
+      .datum(topojson.mesh(tza, tza.objects.TZA_adm1_subunits, function(a, b) { return a !== b; }))
+      .attr("class", "mesh")
+      .attr("d", path);
+
+    // svg.append("g")
+    //     .attr("class", "adm0")
+    //   .selectAll("path")
+    //     .data(topojson.feature(tza, tza.objects.TZA_adm0_subunits).features)
+    //   .enter().append("path")
+    //     .attr("d", path)
+    //   .on("click", click);
+
+  });
+
+  function clicked(d) {
+    if (active.node() === this) return reset();
+    active.classed("active", false);
+    active = d3.select(this).classed("active", true);
+
+    var bounds = path.bounds(d),
+        dx = bounds[1][0] - bounds[0][0],
+        dy = bounds[1][1] - bounds[0][1],
+        x = (bounds[0][0] + bounds[1][0]) / 2,
+        y = (bounds[0][1] + bounds[1][1]) / 2,
+        scale = .9 / Math.max(dx / width, dy / height),
+        translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+    svg.transition()
+        .duration(750)
+        .call(zoom.translate(translate).scale(scale).event);
+  }
+
+  function reset() {
+    active.classed("active", false);
+    active = d3.select(null);
+
+    svg.transition()
+        .duration(750)
+        .call(zoom.translate([0, 0]).scale(1).event);
+  }
+
+  function zoomed() {
+    g.style("stroke-width", 1.5 / d3.event.scale + "px");
+    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  }
+
+  // If the drag behavior prevents the default click,
+  // also stop propagation so we don’t click-to-zoom.
+  function stopped() {
+    if (d3.event.defaultPrevented) d3.event.stopPropagation();
+  }
+
+    // svg.selectAll(".subunit-label")
+    //   .data(topojson.feature(tza, tza.objects.TZA_adm1_subunits).features)
+    // .enter().append("text")
+    //   .attr("class", "subunit-label")
+    //   .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+    //   .attr("dy", ".35em")
+    //   .text(function(d) { return d.properties.NAME_1; });
+
 
     // svg.append("path")
     //     .datum(subunits)
@@ -133,7 +223,6 @@ Kwon,42
     //   .attr("dy", ".35em")
     //   .text(function(d) { return d.properties.name; });
 
-  });
 
   </script>
 </html>
