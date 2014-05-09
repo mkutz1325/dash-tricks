@@ -25,7 +25,7 @@ public class CoverageFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_coverage, container, false);
         // get the appropriate child webview from the parent
         WebView myWebView = (WebView) rootView.findViewById(R.id.webView1);
-        //myWebView.addJavascriptInterface(this, "android");
+        myWebView.addJavascriptInterface(this, "android");
         // enable javascript
         myWebView.getSettings().setJavaScriptEnabled(true);
         // load the appropriate webpage from the assets folder
@@ -34,22 +34,23 @@ public class CoverageFragment extends Fragment {
         return rootView;
     }
     
-/*    double[] data = new double[] {42.6, 24, 17, 15.4};
-	*//**
-	 * <data id="csvdata">name,value
-BCG,97
-OPV-0,50
-OPV-1,92
-Penta-1,82
-Rota-2,23
-Measles-1,83
-</data>
-	 *//*
-	*//** This passes our data out to the JS *//*
+    
+    // pull the below data from a method
+    
+
+    //String data1 = "[{name: BCG, value:97}, {name: OPV-0, value: 50}]";
+    String data = "[{\"name\": \"BCG\",\"value\": 97},{\""
+    		+ "name\": \"OPV-0\",\"value\": 50}]";
+    /*{name: \"OPV-1\",value: 92},{name: "
+    		+ "\"Penta-1\",value: 82},{name: \"Rota-2\",value: 23},{name: \"Measles-1\",value: 83}]";*/
+    
+    
+	/** This passes our data out to the JS */
 	@JavascriptInterface
 	public String getData() {
 		//Log.d(TAG, "getData() called");
-		return a1dToJson(data).toString();
+	    // String data = Data.getImmunization(districtId, monthId)
+		return data;
 	}
 	
 	private String a1dToJson(double[] data) {
@@ -63,6 +64,6 @@ Measles-1,83
 		}
 		sb.append("]");
 		return sb.toString();
-	}*/
+	}
     
 }

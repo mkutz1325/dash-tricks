@@ -2,10 +2,10 @@
 <html>
   <head>
   <style>
-  
-  	body {
-  	  border: solid 1px black;
-  	}
+    body {
+      margin: 0px;
+    }
+
     .bar {
       fill: steelblue;
     }
@@ -53,6 +53,33 @@ OPV-1,92
 Penta-1,82
 Rota-2,23
 Measles-1,83
+
+[
+{
+  name: "BCG",
+  value: "97"
+},
+{
+  name: "OPV-0",
+  value: "50"
+},
+{
+  name: "OPV-1",
+  value: "92"
+},
+{
+  name: "Penta-1",
+  value: "82"
+},
+{
+  name: "Rota-2",
+  value: "23"
+},
+{
+  name: "Measles-1",
+  value: "83"
+}
+]
 </data>
   </body>
 
@@ -90,10 +117,9 @@ Measles-1,83
       return d;
     }
 
-    var data = d3.csv.parse(d3.select("#csvdata").html(), type);
-    //var data = android.getData();
-    
-    //document.write(JSON.stringify(data));
+    var data = android.getData();
+    data = JSON.parse(data);
+    //document.write(data);
 
     xscale.domain(data.map(function(d) { return d.name; }));
     yscale.domain([0, Math.max(d3.max(data, function(d) { return d.value; }),110)]);
