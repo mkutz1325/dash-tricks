@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * this class provides all functions needed for the display
@@ -68,9 +68,10 @@ public class Query {
 	 * @return Json format string of vaccine/coverage
 	 */
 	public String getImmunization(int districtID, int month){
-		String m = YEAR + "-" + month;
-		String res = "{\"imuunization\" : [";
-		Cursor cur = database.rawQuery("Select v." + VaccineTable.NAME + ", avg(a." + AggVaccineTable.COVERAGE + ") "
+		String m = String.format("'%d-%d'", YEAR, month);
+		String res = "{\"immunization\" : [";
+		
+		Cursor cur = database.rawQuery("Select v." + VaccineTable.NAME + ", avg(a." + AggVaccineTable.COVERAGE + ") " + ", a." + AggVaccineTable.MONTH +" "
 										+ "from " + DistrictTable.TABLENAME + " as d, " + SubDistrictTable.TABLENAME + 
 										" as s, " + AggVaccineTable.TABLENAME + " as a, " + VaccineTable.TABLENAME + " as v "
 										+ "where d." + DistrictTable.SUBID + "= s." + SubDistrictTable.ID + " and s."
@@ -78,14 +79,18 @@ public class Query {
 										AggVaccineTable.VACCINE_ID + "= v." + VaccineTable.ID + " and a." +
 										AggVaccineTable.MONTH + " = " + m + " and d." +DistrictTable.ID + " = " + districtID
 										+ " " + "group by v." + VaccineTable.NAME, new String[] {});
+										
+		
 		List<String> list = new ArrayList<String>();
 		cur.moveToFirst();
 		while(!cur.isAfterLast()){
-			//String temp = "{ \"name\" : \"" + cur.getString(0) + "\", \"coverage\" : " + cur.getInt(1) + "}";  
-			list.add("{ \"name\" : \"" + cur.getString(0) + "\", \"coverage\" : " + cur.getInt(1) + "}");
+			String temp = "{ \"name\" : \"" + cur.getString(0) + "\", \"coverage\" : " + cur.getInt(1) + "}";  
+			list.add(temp);			
+			Log.e("Query.java ", temp);
 			cur.moveToNext();
 		}
 		cur.close();
+
 		res += buildString(list) + "]}";
 		return res;
 	}
