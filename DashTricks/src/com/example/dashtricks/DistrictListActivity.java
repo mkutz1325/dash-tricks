@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+import com.example.dashtricks.data.DistrictList;
+import com.example.dashtricks.data.Query;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +29,9 @@ public class DistrictListActivity extends FragmentActivity implements DistrictLi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_district_list);
 
+		Query q = new Query(this);
+		String districts = q.getAllDistricts();
+		DistrictList.setJText(districts);
 
 /*		if (findViewById(R.id.metric_detail_container) != null) {
 			// The detail container view will be present only in the
