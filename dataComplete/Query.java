@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * this class provides all functions needed for the display
@@ -45,8 +45,7 @@ public class Query {
 		cur.moveToFirst();
 		List<String> list = new ArrayList<String>();
 		while(!cur.isAfterLast()){
-			String coor = "[" + cur.getString(0) + "]";
-			String temp = "{ \"name\" : \"" + cur.getString(0) + "\", \"id\" : " + cur.getInt(1) + ", \"coor\": \"" + coor + "\"}";  
+			String temp = "{ \"name\" : \"" + cur.getString(0) + "\", \"id\" : " + cur.getInt(1) + ", \"coor\": \"" + cur.getString(2) + "\"}";  
 			list.add(temp);
 			cur.moveToNext();
 		}
@@ -69,23 +68,30 @@ public class Query {
 	 */
 	public String getImmunization(int districtID, int month){
 		String m = YEAR + "-" + month;
-		String res = "{\"imuunization\" : [";
-		Cursor cur = database.rawQuery("Select v." + VaccineTable.NAME + ", avg(a." + AggVaccineTable.COVERAGE + ") "
-										+ "from " + DistrictTable.TABLENAME + " as d, " + SubDistrictTable.TABLENAME + 
-										" as s, " + AggVaccineTable.TABLENAME + " as a, " + VaccineTable.TABLENAME + " as v "
-										+ "where d." + DistrictTable.SUBID + "= s." + SubDistrictTable.ID + " and s."
-										+ SubDistrictTable.FACILITY_ID + " = a." + AggVaccineTable.FACILITY_ID + " and a." + 
+		String res = "{\"immunization\" : [";
+		
+		Cursor cur = database.rawQuery("Select v." + VaccineTable.NAME + ", avg(a." + AggVaccineTable.COVERAGE + ") " + " "
+										+ "from " + DistrictTable.TABLENAME + " as d, " + SubDistrictTable.TABLENAME + " as s, " + 
+										 FacilityTable.TABLENAME + " as f, " + AggVaccineTable.TABLENAME + " as a, " + VaccineTable.TABLENAME + " as v "
+										+ "where d." + DistrictTable.ID + "= s." + SubDistrictTable.DISTRICTID + " and s."
+										+ SubDistrictTable.ID + "= f." + FacilityTable.SUBID + " and f." + FacilityTable.ID + " = a." + AggVaccineTable.FACILITY_ID + " and a." + 
 										AggVaccineTable.VACCINE_ID + "= v." + VaccineTable.ID + " and a." +
-										AggVaccineTable.MONTH + " = " + m + " and d." +DistrictTable.ID + " = " + districtID
+										AggVaccineTable.MONTH + " = '" + m + "' and d." + DistrictTable.ID + " = " + districtID
 										+ " " + "group by v." + VaccineTable.NAME, new String[] {});
+		
+		
+		//Cursor cur = database.rawQuery("Select * from " + DistrictTable.TABLENAME + " where " + DistrictTable.ID + "= " + districtID, new String[] {});
+		
 		List<String> list = new ArrayList<String>();
 		cur.moveToFirst();
 		while(!cur.isAfterLast()){
-			//String temp = "{ \"name\" : \"" + cur.getString(0) + "\", \"coverage\" : " + cur.getInt(1) + "}";  
-			list.add("{ \"name\" : \"" + cur.getString(0) + "\", \"coverage\" : " + cur.getInt(1) + "}");
+			String temp = "{ \"name\" : \"" + cur.getString(0) + "\", \"coverage\" : " + cur.getInt(1) + "}";  
+			list.add(temp);			
+			//Log.e("Query.java ", temp);
 			cur.moveToNext();
 		}
 		cur.close();
+
 		res += buildString(list) + "]}";
 		return res;
 	}
@@ -103,9 +109,9 @@ public class Query {
 		Cursor cur = database.rawQuery("Select d." + DistrictTable.NAME + ", sum(a." + AggCapacityTable.REQUIRED_CAPA + ") " +
 										", sum(a." + AggCapacityTable.CURR_CAPA + ") "
 										+ "from " + DistrictTable.TABLENAME + " as d, " + SubDistrictTable.TABLENAME + 
-										" as s, " + AggCapacityTable.TABLENAME  + " as a "
-										+ "where d." + DistrictTable.SUBID + "= s." + SubDistrictTable.ID + " and s."
-										+ SubDistrictTable.FACILITY_ID + " = a." + AggCapacityTable.FACILITY_ID + " and d." + 
+										" as s, "  + FacilityTable.TABLENAME + " as f, "+ AggCapacityTable.TABLENAME  + " as a "
+										+ "where d." + DistrictTable.ID + "= s." + SubDistrictTable.DISTRICTID + " and s."
+										+ SubDistrictTable.ID + " = f." + FacilityTable.SUBID + " and f." + FacilityTable.ID + " = a." + AggCapacityTable.FACILITY_ID + " and d." + 
 										 DistrictTable.ID + " = " + districtID
 										+ " " + "group by d." + DistrictTable.NAME, new String[] {});
 		cur.moveToFirst();
@@ -140,8 +146,9 @@ public class Query {
 		String res = "{\"vaccine_level\":[";
 		Cursor cur = database.rawQuery("Select d." + DistrictTable.NAME + ", sum(a." + AggVaccineTable.STOCK_LEVEL + ") " + " "
 										+ "from " + DistrictTable.TABLENAME + " as d, " + SubDistrictTable.TABLENAME + " as s, " + AggVaccineTable.TABLENAME
-										+ " as a " + "where d." + DistrictTable.SUBID + "= s." + SubDistrictTable.ID + " and s."
-										+ SubDistrictTable.FACILITY_ID + " = a." + AggVaccineTable.FACILITY_ID + " and d." + 
+										+ " as a, " + FacilityTable.TABLENAME + " as f "
+										+ "where d." + DistrictTable.ID + "= s." + SubDistrictTable.DISTRICTID + " and s."
+										+ SubDistrictTable.ID + "= f." + FacilityTable.SUBID + " and f." + FacilityTable.ID+ " = a." + AggVaccineTable.FACILITY_ID + " and d." + 
 										 DistrictTable.ID + " = " + districtID
 										+ " " + "group by d." + DistrictTable.NAME, new String[] {});
 		cur.moveToFirst();
