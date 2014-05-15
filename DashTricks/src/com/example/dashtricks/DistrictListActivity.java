@@ -26,12 +26,16 @@ public class DistrictListActivity extends FragmentActivity implements DistrictLi
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		Query q = new Query(this);
+		q.open();
+		String districts = q.getAllDistricts();
+		DistrictList.setJText(districts);
+		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_district_list);
 
-		Query q = new Query(this);
-		String districts = q.getAllDistricts();
-		DistrictList.setJText(districts);
+
 
 /*		if (findViewById(R.id.metric_detail_container) != null) {
 			// The detail container view will be present only in the
