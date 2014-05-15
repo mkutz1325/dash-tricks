@@ -6,10 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import com.example.dash_tricks.FridgeCapacityContract.FridgeCapacity;
+/*import com.example.dash_tricks.FridgeCapacityContract.FridgeCapacity;
 import com.example.dash_tricks.FridgeTemperatureContract.FridgeTemperature;
 import com.example.dash_tricks.VaccCoverContract.VaccCoverage;
-import com.example.dash_tricks.VaccSupplyContract.VaccSupply;
+import com.example.dash_tricks.VaccSupplyContract.VaccSupply;*/
 
 import android.content.ContentValues;
 import android.content.Context;
