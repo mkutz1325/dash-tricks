@@ -1,4 +1,4 @@
-package com.example.dash_tricks;
+package com.example.dashtricks.data;
 /**
  * define facility table
  * id/name/population/ coor

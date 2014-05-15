@@ -1,4 +1,4 @@
-package com.example.dash_tricks;
+package com.example.dashtricks.data;
 /**
  * this class define fridge model table
  * model/capacity_freezer/ capacity-fridge/sign date

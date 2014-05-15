@@ -1,4 +1,4 @@
-package com.example.dash_tricks;
+package com.example.dashtricks.data;
 
 /**
  * this class defines vaccine table

@@ -1,4 +1,4 @@
-package com.example.dash_tricks;
+package com.example.dashtricks.data;
 /**
  * define district table
  * id/name/subdistrict_id/manager/coor
