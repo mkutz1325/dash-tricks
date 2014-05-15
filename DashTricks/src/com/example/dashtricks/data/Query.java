@@ -1,4 +1,4 @@
-package com.example.dashtricks.data;
+package com.example.dash_tricks;
 
 import java.util.ArrayList;
 import java.util.Iterator;
