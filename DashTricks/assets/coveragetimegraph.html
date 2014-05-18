@@ -86,22 +86,22 @@
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     function type(d) {
-      d.value = +d.value; // coerce to number
+      d.coverage = +d.coverage; // coerce to number
       return d;
     }
 
     var data = JSON.parse(android.getData());
 
     xscale.domain(data.map(function(d) { return d.month; }));
-    yscale.domain([Math.min(d3.min(data, function(d) { return d.value; }), 0), 
-                    Math.max(d3.max(data, function(d) { return d.value; }),10)]);
+    yscale.domain([Math.min(d3.min(data, function(d) { return d.coverage; }), 0), 
+                    Math.max(d3.max(data, function(d) { return d.coverage; }),10)]);
 
     function pointX (d) {
       return xscale(d.month) + xscale.rangeBand() / 2;
     }
 
     function pointY (d) {
-      return yscale(d.value);
+      return yscale(d.coverage);
     }
 
     var line = d3.svg.line()
