@@ -1,4 +1,4 @@
-package com.example.dash_tricks;
+package com.example.dashtricks.data;
 /**
  * this class define aggregate fridge info table
  * fridge id/ facility id/ month/ current capacity/ required capacity

@@ -35,7 +35,7 @@ public class DistrictList {
 		try {
 			//Query q = new Query(null);
 			jText = "[{\"name\":\"District1\", \"id\":\"District1\"}, "
-					+ "{\"name\":\"District2\", \"id\":\"District2\"}";	
+					+ "{\"name\":\"District2\", \"id\":\"District2\"}]";	
 			//JSONObject json = new JSONObject(jText);
 			Object obj=parser.parse(jText);
 			JSONArray array=(JSONArray)obj;

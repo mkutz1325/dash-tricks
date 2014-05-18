@@ -1,4 +1,4 @@
-package com.example.dash_tricks;
+package com.example.dashtricks.data;
 /**
  * this class defines aggregate info for vaccine table
  * vaccine id/ facility id/month/ stock level/ stock out
