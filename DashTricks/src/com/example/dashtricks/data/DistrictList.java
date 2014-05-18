@@ -5,14 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-/*import org.json.simple.JSONArray;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;*/
+import org.json.simple.parser.ParseException;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -35,29 +31,6 @@ public class DistrictList {
 
 	static {
 		// Add 3 sample items.
-		//JSONParser parser=new JSONParser();
-		try {
-
-/*			//JSONObject json = new JSONObject(jText);
-			Object obj=parser.parse(jText);
-			JSONArray array=(JSONArray)obj;
-			JSONObject d1 = (JSONObject) array.get(0);
-			JSONObject d2 = (JSONObject) array.get(1);*/
-			System.out.println(jText);
-
-			JSONTokener tokener = new JSONTokener(jText);
-
-			JSONArray array= new JSONArray(tokener);
-			JSONObject d1 = array.getJSONObject(0);
-			//JSONObject d2 = (JSONObject) d1.get("argv");
-			
-			
-			//addItem(new District((String) d1.get("id"), (String) d1.get("name")));
-			//addItem(new District((String) d2.get("id"), (String) d2.get("name")));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
 		addItem(new District("District2", "District2"));
 		addItem(new District("District3", "District3"));
@@ -65,6 +38,23 @@ public class DistrictList {
 	
 	public static void setJText(String input) {
 		jText = input;
+		ITEMS.clear();
+		ITEM_MAP.clear();
+		
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject districtObj = (JSONObject) parser.parse(jText);
+			JSONArray districts = (JSONArray) districtObj.get("districts");
+			
+			for(Object dist : districts) {
+				JSONObject d = (JSONObject) dist;
+				addItem(new District(d.get("id").toString(), d.get("name").toString()));
+				
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	private static void addItem(District d) {
