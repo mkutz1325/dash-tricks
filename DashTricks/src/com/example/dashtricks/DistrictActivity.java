@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.dashtricks.R;
 
-public class MainActivity extends Activity implements ActionBar.TabListener {
+public class DistrictActivity extends Activity implements ActionBar.TabListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide

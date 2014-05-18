@@ -1,11 +1,13 @@
 package com.example.dashtricks;
 
+import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.app.LoaderManager;
+
+import com.example.dashtricks.data.Query;
 
 /**
  * An activity representing a list of Districts. 
@@ -17,13 +19,22 @@ public class DistrictListActivity extends FragmentActivity
 									implements DistrictListFragment.Callbacks,
 									LoaderManager.LoaderCallbacks<Cursor>{
 
+	public Query q;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
+		
+		q = new Query(this);
+		q.open();
+		GlobalState state = (GlobalState) getApplicationContext();
+		state.setQuery(q);
+		
 		setContentView(R.layout.activity_district_list);
-		getLoaderManager().initLoader(0, null, this);
+		//getLoaderManager().initLoader(0, null, this);
 
+
+		//Intent intent = getIntent();
 	}
 
 	/**
@@ -32,7 +43,7 @@ public class DistrictListActivity extends FragmentActivity
 	 */
 	@Override
 	public void onItemSelected(String id) {
-		Intent detailIntent = new Intent(this, MainActivity.class);
+		Intent detailIntent = new Intent(this, DistrictActivity.class);
 		startActivity(detailIntent);
 	}
 

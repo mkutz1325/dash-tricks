@@ -27,17 +27,14 @@ public class DistrictList {
 	 * A map of sample (dummy) items, by ID.
 	 */
 	public static Map<String, District> ITEM_MAP = new HashMap<String, District>();
-	public static String jText = "";
+	public static String jText;
 
-	static {
-		// Add 3 sample items.
-
-		addItem(new District("District2", "District2"));
-		addItem(new District("District3", "District3"));
+	public DistrictList(String inputText) {
+		jText = inputText;
+		parse();
 	}
 	
-	public static void setJText(String input) {
-		jText = input;
+	public static void parse() {
 		ITEMS.clear();
 		ITEM_MAP.clear();
 		
@@ -63,7 +60,7 @@ public class DistrictList {
 	}
 
 	/**
-	 * A dummy item representing a piece of content.
+	 * A District list item
 	 */
 	public static class District {
 		public String id;
