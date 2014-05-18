@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+
+    body {
+      margin: 0px;
+    }
+
+    .bar.recieved {
+      fill: DeepSkyBlue;
+    }
+
+    .bar.end {
+      fill: blue;
+    }
+
+    .bartext {
+      fill: white;
+      font: 14px sans-serif;
+    }
+
+    .axis text {
+      font: 14px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis line {
+      display: none;
+    }
+
+    .xmarks.axis text, .xmarks.axis path {
+      display: none;
+    }
+
+    data {
+      display: none;
+    }
+  </style>
+
+  <svg class="chart">
+  </svg>
+
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  
+  </head>
+  <body>
+  </body>
+
+  <script>
+
+    var windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var windowHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+
+    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+        width = windowWidth - margin.left - margin.right,
+        height = windowHeight - margin.top - margin.bottom;
+
+    var xscale = d3.scale.ordinal()
+      .rangeRoundBands([0, width], .1);
+
+    var yscale = d3.scale.linear()
+      .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+      .scale(xscale)
+      .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+      .scale(yscale)
+      .orient("left");
+
+    var chart = d3.select(".chart")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    function type(d) {
+      d.recieved = +d.recieved; // coerce to number
+      d.end = +d.end
+      return d;
+    }
+
+    var data = JSON.parse(android.getData());
+
+    xscale.domain(data.map(function(d) { return d.name; }));
+    yscale.domain([0, Math.max(d3.max(data, function(d) { return Math.max(d.recieved, d.end); }),110)]);
+
+    chart.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    chart.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+    var xmarksScale = d3.scale.ordinal()
+          .rangePoints([0, width], .1)
+          .domain(d3.range(0,data.length + 1));
+
+    var xmarks = d3.svg.axis()
+        .scale(xmarksScale)
+        .orient("top")
+        .tickSize(10)
+        .ticks(data.length);
+
+    chart.append("g")
+      .attr("class", "xmarks axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xmarks);
+
+    
+
+    chart.selectAll(".bar")
+        .data(data)
+      .enter().append("g").each( function(d) {
+        var recievedHeightVal = height - yscale(d.recieved);
+        var endHeightVal = height - yscale(d.end);
+        var widthVal = xscale.rangeBand() / 2;
+        d3.select(this).append("rect")
+          .attr("class", "bar recieved")
+          .attr("x", xscale(d.name))
+          .attr("y", yscale(d.recieved))
+          .attr("height", recievedHeightVal)
+          .attr("width", widthVal);
+        d3.select(this).append("rect")
+          .attr("class", "bar end")
+          .attr("x", xscale(d.name) + widthVal)
+          .attr("y", yscale(d.end))
+          .attr("height", endHeightVal)
+          .attr("width", widthVal);
+      });
+
+      
+    
+
+  </script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

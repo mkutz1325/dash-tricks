@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+
+    body {
+      margin: 0px;
+    }
+
+    .bartext {
+      fill: white;
+      font: 14px sans-serif;
+    }
+
+    .axis text {
+      font: 14px sans-serif;
+    }
+
+    .line {
+      fill: none;
+      stroke-width: 1.5px;
+    }
+
+    .line.tranparent {
+      opacity: .18;
+    }
+
+    .classLine {
+      fill: none;
+      stroke: black;
+      stroke-dasharray: 5,15;
+      stroke-width: .5px;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+    }
+
+    data {
+      display: none;
+    }
+  </style>
+
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  
+  </head>
+  <body>
+  </body>
+
+  <script>
+
+    // set window to fill screen
+    var windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var windowHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+
+    var margin = {top: 20, right: 30, bottom: 30, left: 50},
+        width = windowWidth - margin.left - margin.right,
+        height = windowHeight - margin.top - margin.bottom;
+
+    var xscale = d3.scale.ordinal()
+      .rangePoints([0, width], .1);
+
+    var yscale = d3.scale.linear()
+      .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+      .scale(xscale)
+      .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+      .scale(yscale)
+      .orient("left");
+
+    var highlight = "Rota";
+
+    var svg = d3.select("body").append("svg")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    function type(d) {
+      d.value = +d.value; // coerce to number
+      return d;
+    }
+
+    var data = JSON.parse(android.getData());
+
+    xscale.domain(data.map(function(d) { return d.month; }));
+    yscale.domain([Math.min(d3.min(data, function(d) { return d.value; }), 0), 
+                    Math.max(d3.max(data, function(d) { return d.value; }),10)]);
+
+    function pointX (d) {
+      return xscale(d.month) + xscale.rangeBand() / 2;
+    }
+
+    function pointY (d) {
+      return yscale(d.value);
+    }
+
+    var line = d3.svg.line()
+                  .x(pointX)
+                  .y(pointY);
+
+    var categoryLine = d3.svg.line()
+                        .x(function (d) { return d.x })
+                        .y(function (d) { return d.y });
+
+    // put the axis on
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+    // put the classifier on
+    var badUpperLimit = 50;
+    svg.append("path")
+      .attr("class", "classLine")
+      .attr("d", categoryLine([
+        {
+          x: 0, 
+          y: yscale(badUpperLimit)
+        },
+        {
+          x: xscale.range()[xscale.range().length-1],
+          y: yscale(badUpperLimit)
+        }
+        ]));
+
+
+    // nest data by category
+    var categories = d3.nest()
+      .key(function(d) { return d.category; })
+      .entries(data);
+
+    var g = svg.selectAll()
+      .data(categories)
+    .enter().append("g")
+      .attr("class", "category")
+      .attr("type", function(d) {
+        return d.key;
+      });
+
+    // set color for each category
+    var colorScale = d3.scale.category10();
+    
+
+    // draw path for each category
+    g.each(function(d, i) {
+      var e = d3.select(this);
+
+      e.append("path")
+          .attr("class", function(d) { return d.key == highlight ? "line" : "line tranparent"; })
+          .attr("stroke", colorScale(i))
+          .attr("d", function(d) { return line(d.values); });
+    });
+    
+
+
+  </script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
