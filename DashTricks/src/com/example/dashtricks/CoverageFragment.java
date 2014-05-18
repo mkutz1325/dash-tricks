@@ -1,5 +1,10 @@
 package com.example.dashtricks;
  
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +14,7 @@ import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
-import com.example.dashtricks.R;
+import com.example.dashtricks.data.Query;
  
 public class CoverageFragment extends Fragment {
  
@@ -50,7 +55,25 @@ public class CoverageFragment extends Fragment {
 	public String getData() {
 		//Log.d(TAG, "getData() called");
 	    // String data = Data.getImmunization(districtId, monthId)
-		return data;
+		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
+		Query q = state.getQuery();
+		DistrictActivity d = (DistrictActivity) this.getActivity();
+		String districtId = d.getDistrictId();
+		Integer distId = Integer.parseInt(districtId);
+		String coverageExploreVaccine = q.getImmunization(distId, 1);
+		
+		JSONParser parser = new JSONParser();
+		String result = "";
+		try {
+			JSONObject districtObj = (JSONObject) parser.parse(coverageExploreVaccine);
+			JSONArray districts = (JSONArray) districtObj.get("immunization");
+			
+			result = districts.toJSONString();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			Log.i("CoverageData", e.getMessage());
+		}
+		return result;
 	}
 	
 	private String a1dToJson(double[] data) {
