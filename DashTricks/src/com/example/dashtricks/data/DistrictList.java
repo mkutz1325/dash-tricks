@@ -55,6 +55,25 @@ public class DistrictList {
 	}
 	
 	public static void setJText(String input) {
+		jText = input;
+		ITEMS.clear();
+		ITEM_MAP.clear();
+		
+		JSONParser parser = new JSONParser();
+		try {
+			JSONObject districtObj = (JSONObject) parser.parse(jText);
+			JSONArray districts = (JSONArray) districtObj.get("districts");
+			
+			for(Object dist : districts) {
+				JSONObject d = (JSONObject) dist;
+				addItem(new District(d.get("id").toString(), d.get("name").toString()));
+				
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 	}
 
