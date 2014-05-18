@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.dashtricks.data.DistrictList;
+import com.example.dashtricks.data.Query;
 
 /**
  * A list fragment representing a list of Metrics. This fragment also supports
@@ -70,10 +71,16 @@ public class DistrictListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		// TODO: replace with a real list adapter.
+		// get the needed data to create the district list
+		// TODO this should happen in a different thread
+		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
+		Query q = state.getQuery();
+		String districts = q.getAllDistricts();
+		DistrictList districtList = new DistrictList(districts);
+
 		setListAdapter(new ArrayAdapter<DistrictList.District>(getActivity(),
 				android.R.layout.simple_list_item_activated_1,
-				android.R.id.text1, DistrictList.ITEMS));
+				android.R.id.text1, districtList.ITEMS));
 	}
 
 	@Override
