@@ -18,13 +18,23 @@ import com.example.dashtricks.data.Query;
  
 public class CoverageFragment extends Fragment {
  
+	private static String coverageExploreVaccine;
+	
 	public CoverageFragment() {
 	}
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
- 
+    	
+    	// data stuff
+		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
+		Query q = state.getQuery();
+		DistrictActivity d = (DistrictActivity) this.getActivity();
+		String districtId = d.getDistrictId();
+		Integer distId = Integer.parseInt(districtId);
+		coverageExploreVaccine = q.getImmunization(distId, 1);
+		
     	//this.getActivity().setContentView(R.layout.fragment_coverage);
     	// load the parent view
         View rootView = inflater.inflate(R.layout.fragment_coverage, container, false);
@@ -55,12 +65,7 @@ public class CoverageFragment extends Fragment {
 	public String getData() {
 		//Log.d(TAG, "getData() called");
 	    // String data = Data.getImmunization(districtId, monthId)
-		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
-		Query q = state.getQuery();
-		DistrictActivity d = (DistrictActivity) this.getActivity();
-		String districtId = d.getDistrictId();
-		Integer distId = Integer.parseInt(districtId);
-		String coverageExploreVaccine = q.getImmunization(distId, 1);
+
 		
 		JSONParser parser = new JSONParser();
 		String result = "";
