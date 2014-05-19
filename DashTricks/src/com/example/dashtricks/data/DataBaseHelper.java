@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.res.AssetManager;
@@ -27,51 +28,51 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	//create tables
 	//District table
 	private static final String DISTRICT = "CREATE TABLE " + DistrictTable.TABLENAME + "(" + DistrictTable.ID + " "
-    + TEXT_TYPE_INT + " PRIMARY KEY, " + DistrictTable.NAME + " " + TEXT_TYPE_TEXT + ", " + DistrictTable.REGID + " " +
-    TEXT_TYPE_INT + ", " + DistrictTable.MANAGER + " " +
-    TEXT_TYPE_TEXT + ", " + DistrictTable.COOR + " " + TEXT_TYPE_TEXT + ")";
+			+ TEXT_TYPE_INT + " PRIMARY KEY, " + DistrictTable.NAME + " " + TEXT_TYPE_TEXT + ", " + DistrictTable.REGID + " " +
+			TEXT_TYPE_INT + ", " + DistrictTable.MANAGER + " " + 
+			TEXT_TYPE_TEXT + ", " + DistrictTable.COOR + " " + TEXT_TYPE_TEXT + ")";
 	
 	//sub district table
 	private static final String SUBDISTRICT = "CREATE TABLE " + SubDistrictTable.TABLENAME + "(" + SubDistrictTable.ID + " "
-    + TEXT_TYPE_INT + " PRIMARY KEY, " + SubDistrictTable.NAME + " " + TEXT_TYPE_TEXT + ", " + SubDistrictTable.DISTRICTID + " "
-    + TEXT_TYPE_INT + ", " + SubDistrictTable.COOR + " " + TEXT_TYPE_TEXT+ ")";
+			+ TEXT_TYPE_INT + " PRIMARY KEY, " + SubDistrictTable.NAME + " " + TEXT_TYPE_TEXT + ", " + SubDistrictTable.DISTRICTID + " " 
+			+ TEXT_TYPE_INT + ", " + SubDistrictTable.COOR + " " + TEXT_TYPE_TEXT+ ")";
 	
 	//Facility table
 	private static final String FACILITY = "CREATE TABLE " + FacilityTable.TABLENAME + "(" + FacilityTable.ID + " "
-    + TEXT_TYPE_INT + " PRIMARY KEY, " + FacilityTable.NAME + " " + TEXT_TYPE_TEXT + ", " + FacilityTable.POPULATION + " " +
-    TEXT_TYPE_INT + ", "  + FacilityTable.SUBID + " " + TEXT_TYPE_INT + ", "+ FacilityTable.COOR + " " + TEXT_TYPE_TEXT + ")";
+			+ TEXT_TYPE_INT + " PRIMARY KEY, " + FacilityTable.NAME + " " + TEXT_TYPE_TEXT + ", " + FacilityTable.POPULATION + " " +
+			TEXT_TYPE_INT + ", "  + FacilityTable.SUBID + " " + TEXT_TYPE_INT + ", "+ FacilityTable.COOR + " " + TEXT_TYPE_TEXT + ")";
 	//fridge table
 	private static final String FRIDGE = "CREATE TABLE " + FridgeTable.TABLENAME + "(" + FridgeTable.ID + " "
-    + TEXT_TYPE_INT + " PRIMARY KEY, " + FridgeTable.FACILITY_ID + " " + TEXT_TYPE_INT + ", " + FridgeTable.MODEL + " " +
-    TEXT_TYPE_TEXT + ", " + FridgeTable.REQUIRED_CAPACITY + "  " + TEXT_TYPE_INT + ", " + FridgeTable.DATE + " " + TEXT_TYPE_TEXT + ")";
+			+ TEXT_TYPE_INT + " PRIMARY KEY, " + FridgeTable.FACILITY_ID + " " + TEXT_TYPE_INT + ", " + FridgeTable.MODEL + " " +
+			TEXT_TYPE_TEXT + ", " + FridgeTable.REQUIRED_CAPACITY + "  " + TEXT_TYPE_INT + ", " + FridgeTable.DATE + " " + TEXT_TYPE_TEXT + ")";
 	//fridge model table
 	private static final String FRIDGEMODEL = "CREATE TABLE " + FridgeModelTable.TABLENAME + "(" + FridgeModelTable.ID + " "
-    + TEXT_TYPE_INT + " PRIMARY KEY, " + FridgeModelTable.MODEL + " " + TEXT_TYPE_TEXT + ", " + FridgeModelTable.FREEZER_CAPA + " " +
-    TEXT_TYPE_INT + ", " + FridgeModelTable.FRIDGE_CAPA + "  " + TEXT_TYPE_INT + ")";
-    
+			+ TEXT_TYPE_INT + " PRIMARY KEY, " + FridgeModelTable.MODEL + " " + TEXT_TYPE_TEXT + ", " + FridgeModelTable.FREEZER_CAPA + " " +
+			TEXT_TYPE_INT + ", " + FridgeModelTable.FRIDGE_CAPA + "  " + TEXT_TYPE_INT + ")";
+
 	//Vaccine model table
 	private static final String VACCINE = "CREATE TABLE " + VaccineTable.TABLENAME + "(" + VaccineTable.ID + " "
-    + TEXT_TYPE_INT + " PRIMARY KEY, " + VaccineTable.NAME + " " + TEXT_TYPE_TEXT + ", " + VaccineTable.DOSE_NO+ " " +
-    TEXT_TYPE_INT + ", " + VaccineTable.DOSE_VILE + " " + TEXT_TYPE_INT +", " +VaccineTable.WASTED + " " + TEXT_TYPE_INT
-    + ", " + VaccineTable.SPACE + " " + TEXT_TYPE_INT + ")";
+			+ TEXT_TYPE_INT + " PRIMARY KEY, " + VaccineTable.NAME + " " + TEXT_TYPE_TEXT + ", " + VaccineTable.DOSE_NO+ " " +
+			TEXT_TYPE_INT + ", " + VaccineTable.DOSE_VILE + " " + TEXT_TYPE_INT +", " +VaccineTable.WASTED + " " + TEXT_TYPE_INT
+			+ ", " + VaccineTable.SPACE + " " + TEXT_TYPE_INT + ")";
 	
 	//Aggregate capacity data model
-	private static final String AGGFRIDGE= "CREATE TABLE " + AggCapacityTable.TABLENAME + "(" + AggCapacityTable.FRIDGE_ID + " "
-    + TEXT_TYPE_INT + ", " + AggCapacityTable.FACILITY_ID + " " + TEXT_TYPE_INT + ", " + AggCapacityTable.MONTH+ " " +
-    TEXT_TYPE_TEXT + ", " + AggCapacityTable.CURR_CAPA + "  " + TEXT_TYPE_INT + ", " + AggCapacityTable.REQUIRED_CAPA + " " + TEXT_TYPE_INT +
-    ", PRIMARY KEY (" + AggCapacityTable.FRIDGE_ID + ", " + AggCapacityTable.FACILITY_ID + ", " + AggCapacityTable.MONTH + "))";
-    
+	private static final String AGGFRIDGE= "CREATE TABLE " + AggCapacityTable.TABLENAME + "(" + AggCapacityTable.FACILITY_ID + " " + TEXT_TYPE_INT + ", " + AggCapacityTable.MONTH+ " " +
+			TEXT_TYPE_TEXT + ", " + AggCapacityTable.CURR_CAPA + "  " + TEXT_TYPE_INT + ", " + AggCapacityTable.REQUIRED_CAPA + " " + TEXT_TYPE_INT + 
+			", PRIMARY KEY (" + AggCapacityTable.FACILITY_ID + ", " + AggCapacityTable.MONTH + "))";
+
 	//Aggregate vaccine data model
 	private static final String AGGVACC= "CREATE TABLE " + AggVaccineTable.TABLENAME + "(" + AggVaccineTable.VACCINE_ID + " "
-    + TEXT_TYPE_INT + ", " + AggVaccineTable.FACILITY_ID + " " + TEXT_TYPE_INT + ", " + AggCapacityTable.MONTH+ " " +
-    TEXT_TYPE_TEXT + ", " + AggVaccineTable.STOCK_LEVEL + "  " + TEXT_TYPE_INT + ", " +  AggVaccineTable.STOCK_OUT + " " + TEXT_TYPE_INT + ", "
-    + AggVaccineTable.COVERAGE + " " + TEXT_TYPE_INT + ", PRIMARY KEY (" + AggVaccineTable.VACCINE_ID + ", " + AggVaccineTable.FACILITY_ID
-    + ", " + AggVaccineTable.MONTH + "))";
+			+ TEXT_TYPE_INT + ", " + AggVaccineTable.FACILITY_ID + " " + TEXT_TYPE_INT + ", " + AggCapacityTable.MONTH+ " " +
+			TEXT_TYPE_TEXT + ", " + AggVaccineTable.RECEIVED + " " + TEXT_TYPE_INT+ ", " + AggVaccineTable.UESED + " " + TEXT_TYPE_INT +", "
+			+ AggVaccineTable.STOCK_LEVEL + "  " + TEXT_TYPE_INT + ", " +  AggVaccineTable.STOCK_OUT + " " + TEXT_TYPE_INT + ", "
+			+ AggVaccineTable.COVERAGE + " " + TEXT_TYPE_INT + ", PRIMARY KEY (" + AggVaccineTable.VACCINE_ID + ", " + AggVaccineTable.FACILITY_ID
+			+ ", " + AggVaccineTable.MONTH + "))";
 	
-
+	
 	private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ";
 	
-	public static final int DATABASE_VERSION = 27;//increment the database version when change the database schema
+	public static final int DATABASE_VERSION = 36;//increment the database version when change the database schema
 	//public static final String DATABASE_NAME = "VaccCover.db";
 	public static final String DATABASE_NAME = "DashTrick";
 	private Context context;
@@ -86,18 +87,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String column = "";
-
+		//db.beginTransaction();
 		//load district
 		db.execSQL(DISTRICT);
-		column = DistrictTable.ID + ", " + DistrictTable.NAME + ", " + DistrictTable.REGID + ", " +
-        DistrictTable.MANAGER + ", " + DistrictTable.COOR;
+		column = DistrictTable.ID + ", " + DistrictTable.NAME + ", " + DistrictTable.REGID + ", " + 
+						DistrictTable.MANAGER + ", " + DistrictTable.COOR;
 		loadData("district.csv", column, db, DistrictTable.TABLENAME);
-        
+
 		//load sub_district
 		db.execSQL(SUBDISTRICT);
 		column = SubDistrictTable.ID + ", " + SubDistrictTable.NAME + ", " + SubDistrictTable.DISTRICTID + ", " + SubDistrictTable.COOR ;
 		loadData("subDistrict.csv", column, db, SubDistrictTable.TABLENAME);
-        
+
 		//load facility
 		db.execSQL(FACILITY);
 		column = FacilityTable.ID + ", " + FacilityTable.NAME + ", " + FacilityTable.POPULATION + ", " + FacilityTable.SUBID + ", " + FacilityTable.COOR;
@@ -106,34 +107,34 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		//load fridge
 		db.execSQL(FRIDGE);
 		column = FridgeTable.ID + ", " + FridgeTable.FACILITY_ID + ", " + FridgeTable.MODEL + ", " + FridgeTable.REQUIRED_CAPACITY
-        + ", " + FridgeTable.DATE;
+				+ ", " + FridgeTable.DATE;
 		loadData("fridge.csv", column, db, FridgeTable.TABLENAME);
 		
 		//load fridge model
 		db.execSQL(FRIDGEMODEL);
-		column = FridgeModelTable.ID + ", " + FridgeModelTable.MODEL + ", " + FridgeModelTable.FREEZER_CAPA + ", " +
-        FridgeModelTable.FRIDGE_CAPA;
+		column = FridgeModelTable.ID + ", " + FridgeModelTable.MODEL + ", " + FridgeModelTable.FREEZER_CAPA + ", " + 
+				FridgeModelTable.FRIDGE_CAPA;
 		loadData("fridgeModel.csv", column, db, FridgeModelTable.TABLENAME);
 		
 		//load vaccine model
 		db.execSQL(VACCINE);
-		column = VaccineTable.ID + ", " + VaccineTable.NAME + ", " + VaccineTable.DOSE_NO + ", " + VaccineTable.DOSE_VILE +
-        ", " + VaccineTable.WASTED + ", " + VaccineTable.SPACE;
+		column = VaccineTable.ID + ", " + VaccineTable.NAME + ", " + VaccineTable.DOSE_NO + ", " + VaccineTable.DOSE_VILE + 
+				", " + VaccineTable.WASTED + ", " + VaccineTable.SPACE;
 		loadData("vaccine.csv", column, db, VaccineTable.TABLENAME);
 		
 		//load aggregate fridge data model
 		db.execSQL(AGGFRIDGE);
-		column = AggCapacityTable.FRIDGE_ID + ", " + AggCapacityTable.FACILITY_ID + ", " + AggCapacityTable.MONTH + ", " +
-        AggCapacityTable.CURR_CAPA + ", " + AggCapacityTable.REQUIRED_CAPA;
+		column = AggCapacityTable.FACILITY_ID + ", " + AggCapacityTable.MONTH + ", " + 
+				AggCapacityTable.CURR_CAPA + ", " + AggCapacityTable.REQUIRED_CAPA;
 		loadData("aggregated_Facility_Capacity_Data.csv", column, db, AggCapacityTable.TABLENAME);
 		
 		//load aggregated vaccine data model
 		db.execSQL(AGGVACC);
-		column = AggVaccineTable.VACCINE_ID + ", " + AggVaccineTable.FACILITY_ID + ", " + AggVaccineTable.MONTH + ", " +
-        AggVaccineTable.STOCK_LEVEL + ", " + AggVaccineTable.STOCK_OUT + ", " + AggVaccineTable.COVERAGE;
+		column = AggVaccineTable.VACCINE_ID + ", " + AggVaccineTable.FACILITY_ID + ", " + AggVaccineTable.MONTH + ", " + AggVaccineTable.RECEIVED + ","
+				 + AggVaccineTable.UESED + ", " + AggVaccineTable.STOCK_LEVEL + ", " + AggVaccineTable.STOCK_OUT + ", " + AggVaccineTable.COVERAGE;
 		loadData("aggregated_Facility_Vaccine_Data.csv", column, db, AggVaccineTable.TABLENAME);
-        
-   
+
+
 	}
 	
 	private void loadData(String file, String column,SQLiteDatabase db, String tablename){
@@ -141,12 +142,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		BufferedReader buffer = null;
 		try {
 			AssetManager am = context.getAssets();
-            
+
 			buffer = new BufferedReader(new InputStreamReader(am.open(file)));
 		} catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-		}
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		} 
 		String str1 = "INSERT INTO " + tablename + " (" + column + ") values(";
 		String str2 = ");";
 		String line = "";
@@ -166,10 +167,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		}
 		db.setTransactionSuccessful();
 		db.endTransaction();
-        
+
 	}
-	
-	
+
 	
 	/**
 	 * upgrade the tables
@@ -177,7 +177,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+		// This database is only a cache for online data, so its upgrade policy is
+        // to simply to discard the data and start over
+	   /* db.execSQL("DROP TABLE if EXISTS " + VaccSupply.TABLE_NAME);
+	    db.execSQL("DROP TABLE if EXISTS " + VaccCoverage.TABLE_NAME);
+	    db.execSQL("DROP TABLE if EXISTS " + FridgeTemperature.TABLE_NAME);
+	    db.execSQL("DROP TABLE if EXISTS " + FridgeCapacity.TABLE_NAME);
+	    
+	    */
 		db.execSQL(SQL_DELETE_ENTRIES + DistrictTable.TABLENAME);
 		db.execSQL(SQL_DELETE_ENTRIES + FacilityTable.TABLENAME);
 		db.execSQL(SQL_DELETE_ENTRIES + SubDistrictTable.TABLENAME);
@@ -207,10 +214,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	}
 	
 }
+	
+
+	
+	/*
+	 * getWritableDatabase() or getReadableDatabase()!!!! for long-running, in a background thread
+	 */
+	
+
+	
 
 
-
-
-
-
-
+	
