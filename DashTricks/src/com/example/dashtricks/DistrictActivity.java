@@ -28,6 +28,7 @@ public class DistrictActivity extends Activity implements ActionBar.TabListener 
 	 * {@link android.support.v13.app.FragmentStatePagerAdapter}.
 	 */
 	SectionsPagerAdapter mSectionsPagerAdapter;
+	private static String districtId;
 
 	/**
 	 * The {@link ViewPager} that will host the section contents.
@@ -39,6 +40,11 @@ public class DistrictActivity extends Activity implements ActionBar.TabListener 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		Bundle extras = getIntent().getExtras();
+
+		if (extras != null) {
+		    districtId = extras.getString("Id");
+		}
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -114,6 +120,11 @@ public class DistrictActivity extends Activity implements ActionBar.TabListener 
 	@Override
 	public void onTabReselected(ActionBar.Tab tab,
 			FragmentTransaction fragmentTransaction) {
+	}
+	
+	// return the district id 
+	public String getDistrictId() {
+		return districtId;
 	}
 
 	/**
