@@ -46,7 +46,7 @@
   
   </head>
   <body>
-<data id="csvdata">name,value
+<data id="csvdata">name,coverage
 BCG,97
 OPV-0,50
 OPV-1,92
@@ -57,27 +57,27 @@ Measles-1,83
 [
 {
   name: "BCG",
-  value: "97"
+  coverage: "97"
 },
 {
   name: "OPV-0",
-  value: "50"
+  coverage: "50"
 },
 {
   name: "OPV-1",
-  value: "92"
+  coverage: "92"
 },
 {
   name: "Penta-1",
-  value: "82"
+  coverage: "82"
 },
 {
   name: "Rota-2",
-  value: "23"
+  coverage: "23"
 },
 {
   name: "Measles-1",
-  value: "83"
+  coverage: "83"
 }
 ]
 </data>
@@ -113,7 +113,7 @@ Measles-1,83
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     function type(d) {
-      d.value = +d.value; // coerce to number
+      d.coverage = +d.coverage; // coerce to number
       return d;
     }
 
@@ -122,7 +122,7 @@ Measles-1,83
     //document.write(data);
 
     xscale.domain(data.map(function(d) { return d.name; }));
-    yscale.domain([0, Math.max(d3.max(data, function(d) { return d.value; }),110)]);
+    yscale.domain([0, Math.max(d3.max(data, function(d) { return d.coverage; }),110)]);
 
     chart.append("g")
       .attr("class", "x axis")
@@ -137,11 +137,11 @@ Measles-1,83
         .data(data)
       .enter().append("g").each( function(d) {
         var xVal = xscale(d.name);
-        var yVal = yscale(d.value);
-        var heightVal = height - yscale(d.value);
+        var yVal = yscale(d.coverage);
+        var heightVal = height - yscale(d.coverage);
         var widthVal = xscale.rangeBand();
         d3.select(this).append("rect")
-          .attr("class", function(d) { return d.value > 80 ? "bar" : "bar warning"})
+          .attr("class", function(d) { return d.coverage > 80 ? "bar" : "bar warning"})
           .attr("x", xVal)
           .attr("y", yVal)
           .attr("height", heightVal)
@@ -152,7 +152,7 @@ Measles-1,83
           .attr("y", yVal)
           .attr("dx", "-.5em")
           .attr("dy", "1em")
-          .text(function(d) { return d.value.toString() + "%"; });
+          .text(function(d) { return d.coverage.toString() + "%"; });
       });
 
     
