@@ -1,0 +1,10 @@
+ This is an example to call the query function
+
+on the first call, it creates database and load to local, later it will just create a connection and read front the database
+
+	Query q = new Query(this);  
+        q.open();
+        List<Pair<String, Pair<String, Integer>>> qs = q.getYearlyStock(1);
+        ArrayAdapter<Pair<String, Pair<String,Integer>>> aas = new ArrayAdapter<Pair<String, Pair<String,Integer>>>(this, android.R.layout.simple_list_item_1, qs);
+        setListAdapter(aas);
+        q.close();

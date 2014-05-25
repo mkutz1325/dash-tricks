@@ -13,4 +13,6 @@ public class AggVaccineTable {
 	public static final String STOCK_LEVEL = "stock_level";
 	public static final String STOCK_OUT = "stock_out";
 	public static final String COVERAGE = "coverage";
+	public static final String RECEIVED = "received";
+	public static final String UESED = "used";
 }
