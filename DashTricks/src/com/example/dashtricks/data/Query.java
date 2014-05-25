@@ -36,6 +36,7 @@ public class Query {
 	}
 	
 	String allDistrict = "";
+	HashMap<Integer, String> subDistrict = new HashMap<Integer, String>();
 	
 	HashMap<String, String> immu = new HashMap<String, String>();
 	
@@ -86,7 +87,38 @@ public class Query {
 	/*
 	 * Json format
 	 * {"districts":[{"name":"district1", "id": 2, "coor": "[ ]"},{},{},{}]}
+	 *
+	 *
 	 */
+
+	/**
+	 * get all subDistrict by given district id
+	 * @param distID
+	 * @return json format string {"subDistricts":[{"name":"subdistrict1", "id": 2, "coor": "[ ]"},{},{},{}]}
+	 */
+	
+	public String getAllSubDistricts(int distID){
+		Log.v("jian", "Start");
+		if(subDistrict.containsKey(distID)){
+			return immu.get(distID);
+		}
+		String res = "{\"subDistricts\": [";
+		Cursor cur = database.rawQuery("Select " + SubDistrictTable.NAME + ", " + SubDistrictTable.ID +  ", "
+										+ SubDistrictTable.COOR + " " + "from " + SubDistrictTable.TABLENAME + " "
+										+ "where " + SubDistrictTable.DISTRICTID + "=" + distID + " ",	new String[]{});
+		cur.moveToFirst();
+		List<String> list = new ArrayList<String>();
+		while(!cur.isAfterLast()){
+			String temp = "{ \"name\" : \"" + cur.getString(0) + "\", \"id\" : " + cur.getInt(1) + ", \"coor\": \"" + cur.getString(2) + "\"}";  
+			list.add(temp);
+			cur.moveToNext();
+		}
+		cur.close();
+		res += buildString(list) + "]}";
+		Log.v("jian", "end");
+		allDistrict = res;
+		return res;
+	}
 	
 	
 
