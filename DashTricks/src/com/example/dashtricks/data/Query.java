@@ -87,16 +87,13 @@ public class Query {
 	/*
 	 * Json format
 	 * {"districts":[{"name":"district1", "id": 2, "coor": "[ ]"},{},{},{}]}
-	 *
-	 *
 	 */
-
+	
 	/**
 	 * get all subDistrict by given district id
 	 * @param distID
 	 * @return json format string {"subDistricts":[{"name":"subdistrict1", "id": 2, "coor": "[ ]"},{},{},{}]}
 	 */
-	
 	public String getAllSubDistricts(int distID){
 		Log.v("jian", "Start");
 		if(subDistrict.containsKey(distID)){
@@ -341,7 +338,7 @@ public class Query {
 		cur.moveToFirst();
 		List<String> list = new ArrayList<String>();
 		while(!cur.isAfterLast()){
-			list.add("{\"facility_id\" : " + cur.getString(0) + ", \"month\" :" + cur.getInt(1) + "}");
+			list.add("{\"facility_id\" : \"" + cur.getString(0) + "\", \"month\" :" + cur.getInt(1) + "}");
 			cur.moveToNext();
 		}
 		cur.close();
@@ -375,7 +372,7 @@ public class Query {
 		cur.moveToFirst();
 		List<String> list = new ArrayList<String>();
 		while(!cur.isAfterLast()){
-			list.add("{\"name\" : " + cur.getString(0) + ", \"coverage\": " + cur.getInt(1) + "}");
+			list.add("{\"name\" : \"" + cur.getString(0) + "\", \"coverage\": " + cur.getInt(1) + "}");
 			cur.moveToNext();
 		}
 		cur.close();
