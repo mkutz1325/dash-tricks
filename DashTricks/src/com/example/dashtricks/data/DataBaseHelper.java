@@ -72,7 +72,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	
 	private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ";
 	
-	public static final int DATABASE_VERSION = 37;//increment the database version when change the database schema
+	public static final int DATABASE_VERSION = 38;//increment the database version when change the database schema
 	//public static final String DATABASE_NAME = "VaccCover.db";
 	public static final String DATABASE_NAME = "DashTrick";
 	private Context context;
