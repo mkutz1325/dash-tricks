@@ -18,17 +18,19 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.dashtricks.DistrictListActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-                <activity
-            android:name="com.example.dashtricks.DistrictActivity"
+        <activity
+            android:name="com.example.dashtricks.DistrictActivityDr"
             android:label="@string/app_name"
-            android:parentActivityName="com.example.dashtricks.DistrictActivity" >
+            android:parentActivityName="com.example.dashtricks.DistrictListActivity"
+            android:screenOrientation="landscape" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.dashtricks.DistrictListActivity" />

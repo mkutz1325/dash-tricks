@@ -1,12 +1,7 @@
 package com.example.dashtricks;
  
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.app.Fragment;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

@@ -80,7 +80,7 @@ public class DistrictListFragment extends ListFragment {
 
 		setListAdapter(new ArrayAdapter<DistrictList.District>(getActivity(),
 				android.R.layout.simple_list_item_activated_1,
-				android.R.id.text1, districtList.ITEMS));
+				android.R.id.text1, DistrictList.ITEMS));
 	}
 
 	@Override

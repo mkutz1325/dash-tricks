@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+    body {
+      margin: 0px;
+      border: 5px solid red;
+    }
+
+    svg {
+      border: 5px solid blue;
+    }
+
+    .bar {
+      fill: steelblue;
+    }
+
+    .bar.warning {
+      fill: IndianRed;
+    }
+
+    .bartext {
+      fill: white;
+      font: 14px sans-serif;
+    }
+
+    .axis text {
+      font: 14px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis path {
+      display: none;
+    }
+
+    data {
+      display: none;
+    }
+  </style>
+
+  <svg class="chart">
+  </svg>
+
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  
+  </head>
+  <body>
+  </body>
+
+  <script>
+
+    var windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var windowHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+
+    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+        width = windowWidth - margin.left - margin.right,
+        height = windowHeight - margin.top - margin.bottom;
+
+    var xscale = d3.scale.ordinal()
+      .rangeRoundBands([0, width], .1);
+
+    var yscale = d3.scale.linear()
+      .range([height, 0]);
+
+    var xAxis = d3.svg.axis()
+      .scale(xscale)
+      .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+      .scale(yscale)
+      .orient("left");
+
+    var chart = d3.select(".chart")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    function type(d) {
+      d.min_coverage = +d.min_coverage; // coerce to number
+      return d;
+    }
+
+    var data = android.getData();
+    data = JSON.parse(data);
+    //document.write(data);
+
+    xscale.domain(data.map(function(d) { return d.subDistrict_name; }));
+    yscale.domain([0, Math.max(d3.max(data, function(d) { return d.min_coverage; }),110)]);
+
+    chart.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis);
+
+    chart.append("g")
+      .attr("class", "y axis")
+      .call(yAxis);
+
+    chart.selectAll(".bar")
+        .data(data)
+      .enter().append("g").each( function(d) {
+        var xVal = xscale(d.subDistrict_name);
+        var yVal = yscale(d.min_coverage);
+        var heightVal = height - yscale(d.min_coverage);
+        var widthVal = xscale.rangeBand();
+        d3.select(this).append("rect")
+          .attr("class", function(d) { return d.min_coverage > 80 ? "bar" : "bar warning"})
+          .attr("x", xVal)
+          .attr("y", yVal)
+          .attr("height", heightVal)
+          .attr("width", widthVal)
+        d3.select(this).append("text")
+          .attr("class", "bartext")
+          .attr("x", xVal + widthVal / 2)
+          .attr("y", yVal)
+          .attr("dx", "-.5em")
+          .attr("dy", "1em")
+          .text(function(d) { return d.min_coverage.toString() + "%"; });
+      });
+
+    
+
+  </script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
