@@ -36,6 +36,7 @@ public class Query {
 	}
 	
 	String allDistrict = "";
+	HashMap<Integer, String> subDistrict = new HashMap<Integer, String>();
 	
 	HashMap<String, String> immu = new HashMap<String, String>();
 	
@@ -56,6 +57,8 @@ public class Query {
 	HashMap<Integer, String> yearStock = new HashMap<Integer, String>();
 	
 	HashMap<String, String> monStock = new HashMap<String, String>();
+	
+	HashMap<String, String > subCoverMonth = new HashMap<String, String>();
 	
 	/**
 	 * get  all districts name/id/ coor
@@ -87,6 +90,34 @@ public class Query {
 	 * Json format
 	 * {"districts":[{"name":"district1", "id": 2, "coor": "[ ]"},{},{},{}]}
 	 */
+	
+	/**
+	 * get all subDistrict by given district id
+	 * @param distID
+	 * @return json format string {"subDistricts":[{"name":"subdistrict1", "id": 2, "coor": "[ ]"},{},{},{}]}
+	 */
+	public String getAllSubDistricts(int distID){
+		Log.v("jian", "Start");
+		if(subDistrict.containsKey(distID)){
+			return immu.get(distID);
+		}
+		String res = "{\"subDistricts\": [";
+		Cursor cur = database.rawQuery("Select " + SubDistrictTable.NAME + ", " + SubDistrictTable.ID +  ", "
+										+ SubDistrictTable.COOR + " " + "from " + SubDistrictTable.TABLENAME + " "
+										+ "where " + SubDistrictTable.DISTRICTID + "=" + distID + " ",	new String[]{});
+		cur.moveToFirst();
+		List<String> list = new ArrayList<String>();
+		while(!cur.isAfterLast()){
+			String temp = "{ \"name\" : \"" + cur.getString(0) + "\", \"id\" : " + cur.getInt(1) + ", \"coor\": \"" + cur.getString(2) + "\"}";  
+			list.add(temp);
+			cur.moveToNext();
+		}
+		cur.close();
+		res += buildString(list) + "]}";
+		Log.v("jian", "end");
+		allDistrict = res;
+		return res;
+	}
 	
 	
 
@@ -226,7 +257,7 @@ public class Query {
 		if(distCover.containsKey(key)){
 			return distCover.get(key);
 		}
-		String res = "{\"distrcit_coverage\": [";
+		String res = "{\"district_coverage\": [";
 		Cursor cur = database.rawQuery("Select v." + VaccineTable.NAME + ", s." + SubDistrictTable.NAME + ",  min(a." + AggVaccineTable.COVERAGE + ") " + " "
 				+ "from " + DistrictTable.TABLENAME + " as d, " + SubDistrictTable.TABLENAME + " as s, " + AggVaccineTable.TABLENAME
 				+ " as a, " + FacilityTable.TABLENAME + " as f, " + VaccineTable.TABLENAME + " as v " 
@@ -249,6 +280,12 @@ public class Query {
 		return res;
 	}
 	
+	/**
+	 * get yearly average coverage rate of each facility for give vaccine and sub district
+	 * @param vID
+	 * @param subID
+	 * @return
+	 */
 	public String getSubDistrictCoverage(int vID, int subID){
 		Log.v("jian", "Start");
 		String key = vID + ", " + subID;
@@ -288,6 +325,43 @@ public class Query {
 	 */
 	
 	/**
+	 * find monthly average coverage rate for given vaccine and sub district
+	 * @param vacID
+	 * @param subID
+	 * @return Joson format string {"monthly_subDistrict_coverage":[{"vacName":"name", "subDistrictName":"name", "month": "", "averageRate":  },{},{}]
+	 */
+	public String getMonthlySubDistrictCoverage(int vacID, int subID){
+		Log.v("jian", "Start");
+		String key = vacID + ", " + subID;
+		if(subCoverMonth.containsKey(key)){
+			return subCover.get(key);
+		}
+		String res = "{\"monthly_subDistrcit_coverage\": [";
+		Cursor cur = database.rawQuery("Select v." + VaccineTable.NAME + ", s." + SubDistrictTable.NAME + ", a." + AggVaccineTable.MONTH + ", avg(a. " + AggVaccineTable.COVERAGE  + ") "
+				+ "from " + SubDistrictTable.TABLENAME + " as s, " + AggVaccineTable.TABLENAME
+				+ " as a, " + FacilityTable.TABLENAME + " as f, " + VaccineTable.TABLENAME + " as v " 
+				+ "where s." + SubDistrictTable.ID + "= f." + FacilityTable.SUBID + " and f." + FacilityTable.ID+ " = a." + AggVaccineTable.FACILITY_ID + " and s." + 
+				 SubDistrictTable.ID + " = " + subID + " and a." + AggVaccineTable.VACCINE_ID + " = " + vacID + " and a."+ AggVaccineTable.VACCINE_ID + " = v."
+				 + VaccineTable.ID
+				+ " " + "group by f." + FacilityTable.NAME + ", v." + VaccineTable.NAME + ", a." + AggVaccineTable.MONTH, new String[] {});
+		cur.moveToFirst();
+		List<String> list = new ArrayList<String>();
+		while(!cur.isAfterLast()){
+			String temp = "{ \"vaccine_name\" : \"" + cur.getString(0) + "\", \"subDistrict_name\" : \"" + cur.getString(1) + "\", \"" + 
+							cur.getString(2) + "\", \"coverage\" :" + cur.getInt(3) + "}";  
+			list.add(temp);
+			cur.moveToNext();
+		}
+		cur.close();
+		res += buildString(list) + "]}";
+		Log.v("jian", "end");
+		subCoverMonth.put(key, res);
+		return res;
+	}
+	
+	
+	
+	/**
 	 * get vaccine coverage rate for given facility given month
 	 * @param facility_id
 	 * @param month
@@ -309,7 +383,7 @@ public class Query {
 		cur.moveToFirst();
 		List<String> list = new ArrayList<String>();
 		while(!cur.isAfterLast()){
-			list.add("{\"facility_id\" : " + cur.getString(0) + ", \"month\" :" + cur.getInt(1) + "}");
+			list.add("{\"facility_id\" : \"" + cur.getString(0) + "\", \"month\" :" + cur.getInt(1) + "}");
 			cur.moveToNext();
 		}
 		cur.close();
@@ -343,7 +417,7 @@ public class Query {
 		cur.moveToFirst();
 		List<String> list = new ArrayList<String>();
 		while(!cur.isAfterLast()){
-			list.add("{\"name\" : " + cur.getString(0) + ", \"coverage\": " + cur.getInt(1) + "}");
+			list.add("{\"name\" : \"" + cur.getString(0) + "\", \"coverage\": " + cur.getInt(1) + "}");
 			cur.moveToNext();
 		}
 		cur.close();
