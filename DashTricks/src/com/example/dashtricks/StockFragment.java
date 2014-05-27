@@ -1,6 +1,14 @@
 package com.example.dashtricks;
  
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,5 +83,28 @@ public class StockFragment extends Fragment {
 			e.printStackTrace();
 		}
 		return string;
+	}
+	
+	@JavascriptInterface
+	public int getDistrict() {
+		DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
+		String districtId = d.getDistrictId();
+		Integer distId = Integer.parseInt(districtId);
+		
+		return distId;
+	}
+	
+	@JavascriptInterface
+	public String getCoverage() {
+		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
+		Query q = state.getQuery();
+		DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
+		String districtId = d.getDistrictId();
+		Integer distId = Integer.parseInt(districtId);
+		
+		String stockLevel = q.getDistrictCoverage(1,distId);
+		
+		return stockLevel;
+	
 	}
 }

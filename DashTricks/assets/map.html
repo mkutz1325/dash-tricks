@@ -13,12 +13,7 @@
     }
 
     .feature {
-      fill: #ccc;
       cursor: pointer;
-    }
-
-    .feature.active {
-      fill: orange;
     }
 
     .mesh {
@@ -86,7 +81,26 @@
   console.log("beforeload from start: " + (beforeload-start));
 
   var tza = JSON.parse(android.getData());
-  var distID = 33658;
+  var coverage = JSON.parse(android.getCoverage());
+  coverage = coverage.district_coverage
+  var distID = android.getDistrict();
+
+  console.log("District id: " + distID);
+
+  var coverageByName = {};
+  var maxCoverage = -1;
+  var minCoverage = 100000;
+  console.log("Length: " + coverage.length);
+  for (var index = 0; index < coverage.length; index++) {
+    coverageByName[coverage[index].subDistrict_name] = +coverage[index].min_coverage;
+    console.log(+coverage[index].min_coverage);
+    maxCoverage = Math.max(maxCoverage, +coverage[index].min_coverage);
+    minCoverage = Math.min(minCoverage, +coverage[index].min_coverage);
+  }
+
+  var color = d3.scale.linear()
+                .domain([minCoverage, maxCoverage])
+                .range(["#ff0000", "#eeeeee"]);
 
   var afterload = new Date();
   console.log("time to load: " + (afterload-beforeload));
@@ -124,7 +138,7 @@
 
   var beforeFeature = new Date();
 
-  var feat = topojson.feature(tza, districts[33658]);
+  var feat = topojson.feature(tza, districts[distID]);
 
   g.selectAll("path")
     .data([feat])
@@ -133,11 +147,18 @@
     .attr("class", "feature")
     .attr("id", function(d) { return d.properties.ID_2.toString() });
 
+  console.log("MaxCoverage: " + maxCoverage);
+  console.log("MinCoverage: " + minCoverage);
+
   g.selectAll()
     .data(topojson.feature(tza, subdistricts[distID]).features)
   .enter().append("path")
     .attr("d", path)
     .attr("class", "feature")
+    .attr("fill", function(d) { 
+      console.log("Color: " + color(coverageByName[d.properties.NAME_3]));
+      return color(coverageByName[d.properties.NAME_3]); 
+    })
     .attr("id", function(d) { 
       return "id" + d.properties.ID_3.toString() 
     });
