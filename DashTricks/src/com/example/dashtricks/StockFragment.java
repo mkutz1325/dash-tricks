@@ -48,40 +48,40 @@ public class StockFragment extends Fragment {
 	@JavascriptInterface
 	public String getData() {
 		
-		Query q = new Query(this.getActivity());
-		q.open();
-		String districts = q.getAllDistricts();
-		q.close();
-		return districts;
+//		Query q = new Query(this.getActivity());
+//		q.open();
+//		String districts = q.getAllDistricts();
+//		q.close();
+//		return districts;
 
-		//File f = new File("file:///android_asset/districtmap.json");
-//		String string = new String();
-//		try {
-//			Activity a = this.getActivity();
-//			AssetManager assetManager = a.getAssets();
-//			//String[] files = assetManager.list("");
-//			InputStream input = assetManager.open("districtmap.json");
-//			BufferedReader br = new BufferedReader(new InputStreamReader(input));
-//			string = br.readLine();
-//			return string;
-//			//Oreturn s.hasNext() ? s.next() : "";
-///*			while (s.hasNext()) {
-//				
-//				//string.concat(newLine);
-//			}*/
-///*			s.close();
-//			return string;*/
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			String message = e.getMessage();
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (Exception e) {
-//			String message = e.getMessage();
-//			e.printStackTrace();
-//		}
-//		return string;
+//		File f = new File("file:///android_asset/districtmap.json");
+		String string = new String();
+		try {
+			Activity a = this.getActivity();
+			AssetManager assetManager = a.getAssets();
+			//String[] files = assetManager.list("");
+			InputStream input = assetManager.open("tza.json");
+			BufferedReader br = new BufferedReader(new InputStreamReader(input));
+			string = br.readLine();
+			return string;
+			//Oreturn s.hasNext() ? s.next() : "";
+/*			while (s.hasNext()) {
+				
+				//string.concat(newLine);
+			}*/
+/*			s.close();
+			return string;*/
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			String message = e.getMessage();
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			String message = e.getMessage();
+			e.printStackTrace();
+		}
+		return string;
 	}
 }
