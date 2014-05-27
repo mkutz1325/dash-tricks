@@ -77,6 +77,8 @@ public class DistrictActivityDr extends Activity {
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+        // start with coverage fragment as default
+        selectItem(0);
 	}
 	
 

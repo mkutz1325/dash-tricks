@@ -17,8 +17,7 @@
         android:layout_width="0dp"
         android:layout_weight=".5"
         android:layout_height="wrap_content"
-        android:layout_gravity="right" 
-        android:background="#8800FF00" >
+        android:layout_gravity="right" >
         
 
 	    <Spinner
