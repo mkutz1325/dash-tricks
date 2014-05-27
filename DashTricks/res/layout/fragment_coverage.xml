@@ -1,19 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:background="@drawable/border" >"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/border" >
 
     <WebView
         android:id="@+id/webView1"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        android:layout_weight="1.5"
         android:layout_height="378dp"
-        android:layout_weight="0.79" />
+        android:layout_gravity="left" />
 
-    <Spinner
-        android:id="@+id/spinner1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/sideBar1"
+        android:layout_width="0dp"
+        android:layout_weight=".5"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right" 
+        android:background="#8800FF00" >
+        
+
+	    <Spinner
+	        android:id="@+id/spinner1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" /></LinearLayout>
 
 </LinearLayout>

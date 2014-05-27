@@ -24,20 +24,21 @@ import com.example.dashtricks.data.Query;
 public class CoverageFragment extends Fragment {
  
 	private static String coverageResult;
-	private static boolean byVaccine = true;
 	private static WebView mWebView;
 	
 	public CoverageFragment() {
 	}
 	
 	private OnItemSelectedListener mSpinnerListener = new OnItemSelectedListener() {
-	    public void onItemSelected(AdapterView<?> parent, View view, 
+	    @Override
+		public void onItemSelected(AdapterView<?> parent, View view, 
 	            int pos, long id) {
 	        // An item was selected. You can retrieve the selected item using
 	        loadDataToWebView(pos);
 	    }
 
-	    public void onNothingSelected(AdapterView<?> parent) {
+	    @Override
+		public void onNothingSelected(AdapterView<?> parent) {
 	        loadDataToWebView(0);
 	    }
 	};
@@ -98,15 +99,13 @@ public class CoverageFragment extends Fragment {
 	        // load the appropriate webpage from the assets folder
 	        mWebView.loadUrl("file:///android_asset/bargraph.html");
 		} else {
-		    char esc = '"';
-		    String data = "[{name: " + esc + "BCG" + esc + ",value: 97},{name: " + esc + "OPV-0" + esc + ",value: 50}]";
 		    // TODO real vaccine id
 			String coverageBySubDistrict = q.getDistrictCoverage(1, distId);
 			
 			JSONParser parser = new JSONParser();
 			try {
 				JSONObject districtObj = (JSONObject) parser.parse(coverageBySubDistrict);
-				JSONArray districts = (JSONArray) districtObj.get("distrcit_coverage");
+				JSONArray districts = (JSONArray) districtObj.get("district_coverage");
 				
 				coverageResult = districts.toJSONString();
 			} catch (ParseException e) {
