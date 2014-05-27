@@ -9,6 +9,7 @@
     <string name="action_notifications">Notifications</string>
     <string name="drawer_open">Open</string>
 	<string name="drawer_close">Close</string>
+	<string name="button_load">Load!</string>
     
 
 </resources>

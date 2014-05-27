@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="explore_array">
-        <item>Vaccine Type</item>
-        <item>Month</item>
-        <item>Sub-District</item>
+        <item>Functions</item>
+        <item>By Sub-District</item>
+        <item>Monthly</item>
+    </string-array>
+    
+    <string-array name="vaccine_array">
+        <item>Vaccines</item>
+        <item>Vaccine 1</item>
+        <item>Vaccine 2</item>
     </string-array>
     
     <string-array name="drawer_array">

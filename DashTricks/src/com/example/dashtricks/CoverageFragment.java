@@ -17,6 +17,7 @@ import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.example.dashtricks.data.Query;
@@ -25,21 +26,40 @@ public class CoverageFragment extends Fragment {
  
 	private static String coverageResult;
 	private static WebView mWebView;
+	private static int vaccineId = 0;
+	private static int functionId = 0;
 	
 	public CoverageFragment() {
 	}
 	
-	private OnItemSelectedListener mSpinnerListener = new OnItemSelectedListener() {
+	private OnItemSelectedListener mVaccinesListener = new OnItemSelectedListener(0);
+	private OnItemSelectedListener mFunctionsListener = new OnItemSelectedListener(1);
+			
+	private class OnItemSelectedListener implements AdapterView.OnItemSelectedListener {
+		
+		private int type;
+
+		public OnItemSelectedListener(int type) {
+			this.type = type;
+		}
+		
 	    @Override
 		public void onItemSelected(AdapterView<?> parent, View view, 
 	            int pos, long id) {
 	        // An item was selected. You can retrieve the selected item using
-	        loadDataToWebView(pos);
+	    	if (type == 0) {
+	    		vaccineId = pos;
+	    	} else {
+	    		functionId = pos;
+	    	}
 	    }
 
 	    @Override
 		public void onNothingSelected(AdapterView<?> parent) {
-	        loadDataToWebView(0);
+	        if (type == 0)
+	        	vaccineId = 0;
+	        else
+	        	functionId = 0;
 	    }
 	};
 	
@@ -48,7 +68,6 @@ public class CoverageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
 		
-		//this.getActivity().setContentView(R.layout.fragment_coverage);
 		// load the parent view
 		View rootView = inflater.inflate(R.layout.fragment_coverage, container, false);
 		// get the appropriate child webview from the parent
@@ -56,26 +75,43 @@ public class CoverageFragment extends Fragment {
 		mWebView.addJavascriptInterface(this, "android");
 		// enable javascript
 		mWebView.getSettings().setJavaScriptEnabled(true);
-		loadDataToWebView(0);
-		// Capture button from layout
-		/*Button button = (Button) rootView.findViewById(R.id.toggleButton1);
-		// Register the onClick listener with the implementation above
-		button.setOnClickListener(mOnOffListener);*/
 		
-		Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner1);
+		/* Spinner for choosing the vaccine to focus in on */
+		Spinner vaccineDropDown = (Spinner) rootView.findViewById(R.id.spinner1);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
-		        R.array.explore_array, android.R.layout.simple_spinner_item);
+		        R.array.vaccine_array, android.R.layout.simple_spinner_item);
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
-		spinner.setAdapter(adapter);
-		spinner.setOnItemSelectedListener(mSpinnerListener);
-        
+		vaccineDropDown.setAdapter(adapter);
+		vaccineDropDown.setOnItemSelectedListener(mVaccinesListener);
+		
+		/* Spinner for choosing byLocation or byMonth */
+		Spinner functions = (Spinner) rootView.findViewById(R.id.spinner2);
+		// Create an ArrayAdapter with the different function options
+		ArrayAdapter<CharSequence> funcAdapter = ArrayAdapter.createFromResource(this.getActivity(),
+		        R.array.explore_array, android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		funcAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		functions.setAdapter(funcAdapter);
+		functions.setOnItemSelectedListener(mFunctionsListener);
+		
+		/* Button for reloading the web view */
+		Button button = (Button) rootView.findViewById(R.id.button_load);
+		button.setOnClickListener(new View.OnClickListener() {
+		    public void onClick(View v) {
+		        loadDataToWebView();
+		    }
+		});
+		
+		// initial load
+		loadDataToWebView();
         return rootView;
     }
     
-    public void loadDataToWebView(int pos) {
+    public void loadDataToWebView() {
     	// data stuff
 		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
 		Query q = state.getQuery();
@@ -83,7 +119,9 @@ public class CoverageFragment extends Fragment {
 		String districtId = d.getDistrictId();
 		Integer distId = Integer.parseInt(districtId);
 		
-		if (pos == 0) {
+		if (functionId == 0 || vaccineId==0) {
+			// by vaccine
+			// TODO have this query be yearly not for a specific month
 			String coverageByVaccine = q.getImmunization(distId, 1);
 			
 			JSONParser parser = new JSONParser();
@@ -98,9 +136,10 @@ public class CoverageFragment extends Fragment {
 			}
 	        // load the appropriate webpage from the assets folder
 	        mWebView.loadUrl("file:///android_asset/bargraph.html");
-		} else {
-		    // TODO real vaccine id
-			String coverageBySubDistrict = q.getDistrictCoverage(1, distId);
+		} else if (functionId == 1){
+		    // by sub-district
+			// TODO replace 1 with result of first spinner
+			String coverageBySubDistrict = q.getDistrictCoverage(vaccineId, distId);
 			
 			JSONParser parser = new JSONParser();
 			try {
@@ -114,6 +153,23 @@ public class CoverageFragment extends Fragment {
 			}
 	        // load the appropriate webpage from the assets folder
 	        mWebView.loadUrl("file:///android_asset/bargraph2.html");
+		} else {
+			// monthly
+			//TODO this doesn't work, but not worth the effort until new query received
+			String coverageByMonth = q.getMonthlySubDistrictCoverage(vaccineId, distId);
+			
+			JSONParser parser = new JSONParser();
+			try {
+				JSONObject districtObj = (JSONObject) parser.parse(coverageByMonth);
+				JSONArray districts = (JSONArray) districtObj.get("monthly_subDistrict_coverage");
+				
+				coverageResult = districts.toJSONString();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				Log.i("CoverageData", e.getMessage());
+			}
+	        // load the appropriate webpage from the assets folder
+	        mWebView.loadUrl("file:///android_asset/bargraph3.html");
 		}
     }
     

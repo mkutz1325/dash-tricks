@@ -9,8 +9,9 @@ package com.example.dashtricks;
 
 public final class R {
     public static final class array {
-        public static final int drawer_array=0x7f040001;
+        public static final int drawer_array=0x7f040002;
         public static final int explore_array=0x7f040000;
+        public static final int vaccine_array=0x7f040001;
     }
     public static final class attr {
     }
@@ -33,17 +34,19 @@ public final class R {
         public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
-        public static final int action_notifications=0x7f09000b;
-        public static final int action_settings=0x7f09000c;
+        public static final int action_notifications=0x7f09000d;
+        public static final int action_settings=0x7f09000e;
+        public static final int button_load=0x7f09000b;
         public static final int content_frame=0x7f090001;
         public static final int district_list=0x7f090003;
         public static final int drawer_layout=0x7f090000;
         public static final int left_drawer=0x7f090002;
         public static final int sideBar1=0x7f090008;
         public static final int spinner1=0x7f090009;
+        public static final int spinner2=0x7f09000a;
         public static final int textView=0x7f090004;
         public static final int webView1=0x7f090007;
-        public static final int webView2=0x7f09000a;
+        public static final int webView2=0x7f09000c;
         public static final int webView3a=0x7f090005;
         public static final int webView3b=0x7f090006;
     }
@@ -62,6 +65,7 @@ public final class R {
         public static final int action_notifications=0x7f060005;
         public static final int action_settings=0x7f060004;
         public static final int app_name=0x7f060000;
+        public static final int button_load=0x7f060008;
         public static final int cold_chain_section=0x7f060002;
         public static final int coverage_section=0x7f060001;
         public static final int drawer_close=0x7f060007;
