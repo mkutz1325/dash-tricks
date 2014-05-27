@@ -86,6 +86,7 @@
   console.log("beforeload from start: " + (beforeload-start));
 
   var tza = JSON.parse(android.getData());
+  var distID = 33658;
 
   var afterload = new Date();
   console.log("time to load: " + (afterload-beforeload));
@@ -104,6 +105,20 @@
     districts[id] = object;
   }
 
+  var subdistricts = {};
+  for (var index = 0; index < tza.objects.TZA_adm3_subunits.geometries.length; index++) {
+    var id3 = tza.objects.TZA_adm3_subunits.geometries[index].properties.ID_3
+    var id2 = tza.objects.TZA_adm3_subunits.geometries[index].properties.ID_2
+    var object = tza.objects.TZA_adm3_subunits.geometries[index];
+    if (!subdistricts[id2]) {
+      subdistricts[id2] = {
+        type: "GeometryCollection",
+        geometries: []
+      };
+    }
+    subdistricts[id2].geometries.push(object);
+  }
+
   var afterFilter = new Date();
   console.log("time to filter: " + (afterFilter-beforeFilter));
 
@@ -112,11 +127,25 @@
   var feat = topojson.feature(tza, districts[33658]);
 
   g.selectAll("path")
-      .data([feat])
-    .enter().append("path")
-      .attr("d", path)
-      .attr("class", "feature")
-      .attr("id", function(d) { return d.properties.ID_2.toString() });
+    .data([feat])
+  .enter().append("path")
+    .attr("d", path)
+    .attr("class", "feature")
+    .attr("id", function(d) { return d.properties.ID_2.toString() });
+
+  g.selectAll()
+    .data(topojson.feature(tza, subdistricts[distID]).features)
+  .enter().append("path")
+    .attr("d", path)
+    .attr("class", "feature")
+    .attr("id", function(d) { 
+      return "id" + d.properties.ID_3.toString() 
+    });
+
+  g.append("path")
+    .datum(topojson.mesh(tza, subdistricts[distID], function(a, b) { return a !== b; }))
+    .attr("class", "mesh")
+    .attr("d", path);
 
   var afterFeature = new Date();
   console.log("time to feature: " + (afterFeature-beforeFeature));
