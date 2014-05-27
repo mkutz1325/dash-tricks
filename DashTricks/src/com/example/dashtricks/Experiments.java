@@ -1,14 +1,5 @@
 package com.example.dashtricks;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import android.util.Log;
-
-import com.example.dashtricks.data.Query;
-
 /*import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

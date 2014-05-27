@@ -1,13 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#fa6a6a"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/border" >
 
     <WebView
         android:id="@+id/webView1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="0dp"
+        android:layout_weight="1.5"
+        android:layout_height="378dp"
+        android:layout_gravity="left" />
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/sideBar1"
+        android:layout_width="0dp"
+        android:layout_weight=".5"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:orientation="vertical" >
+        
+
+	    <Spinner
+	        android:id="@+id/spinner1"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content" />
+    
+    	<Spinner
+    	    android:id="@+id/spinner2"
+    	    android:layout_width="fill_parent"
+    	    android:layout_height="wrap_content" />
+
+		<Button
+		    android:id="@+id/button_load"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="@string/button_load" /></LinearLayout>
+
+</LinearLayout>

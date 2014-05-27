@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="explore_array">
+        <item>Functions</item>
+        <item>By Sub-District</item>
+        <item>Monthly</item>
+    </string-array>
+    
+    <string-array name="vaccine_array">
+        <item>Vaccines</item>
+        <item>Vaccine 1</item>
+        <item>Vaccine 2</item>
+    </string-array>
+    
+    <string-array name="drawer_array">
+        <item>Immunization Coverage</item>
+        <item>Cold Chain</item>
+        <item>Vaccine Stock</item>
+    </string-array>
+</resources>
