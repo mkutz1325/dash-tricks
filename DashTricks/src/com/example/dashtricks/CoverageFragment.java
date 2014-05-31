@@ -1,12 +1,20 @@
 package com.example.dashtricks;
  
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -122,7 +130,7 @@ public class CoverageFragment extends Fragment {
 		if (functionId == 0 || vaccineId==0) {
 			// by vaccine
 			// TODO have this query be yearly not for a specific month
-			String coverageByVaccine = q.getImmunization(distId, 1);
+			String coverageByVaccine = q.getImmunization(distId);
 			
 			JSONParser parser = new JSONParser();
 			try {
@@ -139,29 +147,40 @@ public class CoverageFragment extends Fragment {
 		} else if (functionId == 1){
 		    // by sub-district
 			// TODO replace 1 with result of first spinner
-			String coverageBySubDistrict = q.getDistrictCoverage(vaccineId, distId);
+			//String coverageBySubDistrict = q.getDistrictCoverage(vaccineId, distId);
 			
-			JSONParser parser = new JSONParser();
+			//JSONParser parser = new JSONParser();
 			try {
-				JSONObject districtObj = (JSONObject) parser.parse(coverageBySubDistrict);
+/*				JSONObject districtObj = (JSONObject) parser.parse(coverageBySubDistrict);
 				JSONArray districts = (JSONArray) districtObj.get("district_coverage");
 				
-				coverageResult = districts.toJSONString();
-			} catch (ParseException e) {
+				coverageResult = districts.toJSONString();*/
+				
+				Activity a = this.getActivity();
+				AssetManager assetManager = a.getAssets();
+				//String[] files = assetManager.list("");
+				InputStream input = assetManager.open("tza.json");
+				BufferedReader br = new BufferedReader(new InputStreamReader(input));
+				coverageResult = br.readLine();
+			} /*catch (ParseException e) {
 				// TODO Auto-generated catch block
 				Log.i("CoverageData", e.getMessage());
+			}*/ catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 	        // load the appropriate webpage from the assets folder
-	        mWebView.loadUrl("file:///android_asset/bargraph2.html");
+	        //mWebView.loadUrl("file:///android_asset/bargraph2.html");
+	        // do this in a map
+	        mWebView.loadUrl("file:///android_asset/map.html");
 		} else {
 			// monthly
 			//TODO this doesn't work, but not worth the effort until new query received
-			String coverageByMonth = q.getMonthlySubDistrictCoverage(vaccineId, distId);
-			
+			String coverageByMonth = q.getMonthlyVaccCover(vaccineId, distId);
 			JSONParser parser = new JSONParser();
 			try {
 				JSONObject districtObj = (JSONObject) parser.parse(coverageByMonth);
-				JSONArray districts = (JSONArray) districtObj.get("monthly_subDistrict_coverage");
+				JSONArray districts = (JSONArray) districtObj.get("districtCoverage");
 				
 				coverageResult = districts.toJSONString();
 			} catch (ParseException e) {
@@ -180,5 +199,25 @@ public class CoverageFragment extends Fragment {
 	    // String data = Data.getImmunization(districtId, monthId)
 
 		return coverageResult;
+	}
+	
+	@JavascriptInterface
+	public int getDistrict() {
+		DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
+		String districtId = d.getDistrictId();
+		Integer distId = Integer.parseInt(districtId);
+		
+		return distId;
+	}
+	
+	@JavascriptInterface
+	public String getCoverage() {
+		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
+		Query q = state.getQuery();
+		int distId = getDistrict();
+		String stockLevel = q.getDistrictCoverage(vaccineId,distId);
+		
+		return stockLevel;
+	
 	}
 }

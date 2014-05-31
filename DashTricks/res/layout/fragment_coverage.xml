@@ -8,9 +8,9 @@
     <WebView
         android:id="@+id/webView1"
         android:layout_width="0dp"
-        android:layout_weight="1.5"
-        android:layout_height="378dp"
-        android:layout_gravity="left" />
+        android:layout_height="471dp"
+        android:layout_gravity="left"
+        android:layout_weight="1.50" />
 
     <LinearLayout
         android:id="@+id/sideBar1"
@@ -18,23 +18,27 @@
         android:layout_weight=".5"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:background="#88B4D8E7" >
         
 
 	    <Spinner
 	        android:id="@+id/spinner1"
 	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content" />
+	        android:layout_height="wrap_content"
+	        android:background="#88000000" />
     
     	<Spinner
     	    android:id="@+id/spinner2"
     	    android:layout_width="fill_parent"
-    	    android:layout_height="wrap_content" />
+    	    android:layout_height="wrap_content"
+    	    android:background="#88000000" />
 
 		<Button
 		    android:id="@+id/button_load"
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
-		    android:text="@string/button_load" /></LinearLayout>
+		    android:text="@string/button_load"
+		    android:background="#88000000" /></LinearLayout>
 
 </LinearLayout>

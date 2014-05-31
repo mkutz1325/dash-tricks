@@ -19,7 +19,7 @@
         android:layout_weight=".5"
         android:layout_height="wrap_content"
         android:layout_gravity="right" 
-        android:background="#8800FF00" >
+        android:background="#88B4D8E7" >
         
         <EditText 
             android:layout_width="fill_parent" 

@@ -98,9 +98,7 @@ public class StockFragment extends Fragment {
 	public String getCoverage() {
 		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
 		Query q = state.getQuery();
-		DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
-		String districtId = d.getDistrictId();
-		Integer distId = Integer.parseInt(districtId);
+		int distId = getDistrict();
 		
 		String stockLevel = q.getDistrictCoverage(1,distId);
 		
