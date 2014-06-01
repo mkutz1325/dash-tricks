@@ -13,6 +13,7 @@
     </string-array>
     
     <string-array name="drawer_array">
+        <item>District Page</item>
         <item>Immunization Coverage</item>
         <item>Cold Chain</item>
         <item>Vaccine Stock</item>

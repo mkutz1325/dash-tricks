@@ -133,7 +133,7 @@ public class CoverageFragment extends Fragment {
 			JSONParser parser = new JSONParser();
 			try {
 				JSONObject districtObj = (JSONObject) parser.parse(coverageByVaccine);
-				JSONArray districts = (JSONArray) districtObj.get("immunization");
+				JSONArray districts = (JSONArray) districtObj.get("districtCoverage");
 				
 				coverageResult = districts.toJSONString();
 			} catch (ParseException e) {

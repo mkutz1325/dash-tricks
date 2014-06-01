@@ -39,7 +39,7 @@ public class Query {
 	String allDistrict = "";
 	HashMap<Integer, String> subDistrict = new HashMap<Integer, String>();
 	
-	HashMap<Integer, String> immu = new HashMap<Integer, String>();
+	HashMap<Integer, String> immuByVacc = new HashMap<Integer, String>();
 	
 	HashMap<Integer, String> distCapa = new HashMap<Integer, String>();
 	
@@ -131,7 +131,7 @@ return res;
 	public String getAllSubDistricts(int distID){
 		Log.v("jian", "Start");
 		if(subDistrict.containsKey(distID)){
-			return immu.get(distID);
+			return subDistrict.get(distID);
 		}
 		String res = "{\"subDistricts\": [";
 		/*Cursor cur = database.rawQuery("Select " + SubDistrictTable.NAME + ", " + SubDistrictTable.ID +  ", "
@@ -173,8 +173,8 @@ return res;
 	public String getImmunization(int districtID){
 		Log.v("jian", "Start");
 		
-		if(immu.containsKey(districtID)){
-			return immu.get(districtID);
+		if(immuByVacc.containsKey(districtID)){
+			return immuByVacc.get(districtID);
 		}
 		
 		String res = "{\"immunization\" : [";
@@ -210,7 +210,7 @@ return res;
 
 		res += buildString(list) + "]}";
 		Log.v("jian", "End");
-		immu.put(districtID, res);
+		immuByVacc.put(districtID, res);
 		return res;
 	}
 	
@@ -268,7 +268,7 @@ return res;
 						vaccName + "\", \"vaccID\": " + vaccID + ", \"districtCoverage\": [";
 		res += buildString(list) + "]}";
 		Log.v("jian", "End");
-		immu.put(districtID, res);
+		getVaccCoverDist.put(key, res);
 		return res;
 
 	}
