@@ -127,7 +127,6 @@ public class CoverageFragment extends Fragment {
 		
 		if (functionId == 0 || vaccineId==0) {
 			// by vaccine
-			// TODO have this query be yearly not for a specific month
 			String coverageByVaccine = q.getImmunization(distId);
 			
 			JSONParser parser = new JSONParser();
