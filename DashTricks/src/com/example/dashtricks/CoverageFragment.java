@@ -89,7 +89,7 @@ public class CoverageFragment extends Fragment {
 		Spinner vaccineDropDown = (Spinner) rootView.findViewById(R.id.spinner1);
 		// Create an ArrayAdapter using the string array and a default spinner layout
 		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
-		        R.array.vaccine_array, android.R.layout.simple_spinner_item);
+		        R.array.vaccine_array, R.layout.spinner_item);
 		// Specify the layout to use when the list of choices appears
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
@@ -100,7 +100,7 @@ public class CoverageFragment extends Fragment {
 		Spinner functions = (Spinner) rootView.findViewById(R.id.spinner2);
 		// Create an ArrayAdapter with the different function options
 		ArrayAdapter<CharSequence> funcAdapter = ArrayAdapter.createFromResource(this.getActivity(),
-		        R.array.explore_array, android.R.layout.simple_spinner_item);
+		        R.array.explore_array, R.layout.spinner_item);
 		// Specify the layout to use when the list of choices appears
 		funcAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		// Apply the adapter to the spinner
@@ -116,7 +116,7 @@ public class CoverageFragment extends Fragment {
 		});
 		
 		// initial load
-		loadDataToWebView();
+		//loadDataToWebView();
         return rootView;
     }
     
@@ -181,7 +181,6 @@ public class CoverageFragment extends Fragment {
 	        mWebView.loadUrl("file:///android_asset/map.html");
 		} else {
 			// monthly
-			//TODO this doesn't work, but not worth the effort until new query received
 			String coverageByMonth = q.getMonthlyVaccCover(distId, vaccineId);
 			JSONParser parser = new JSONParser();
 			try {
@@ -194,16 +193,13 @@ public class CoverageFragment extends Fragment {
 				Log.i("CoverageData", e.getMessage());
 			}
 	        // load the appropriate webpage from the assets folder
-	        mWebView.loadUrl("file:///android_asset/bargraph3.html");
+	        mWebView.loadUrl("file:///android_asset/bargraph4.html");
 		}
     }
     
 	/** This passes our data out to the JS */
 	@JavascriptInterface
 	public String getData() {
-		//Log.d(TAG, "getData() called");
-	    // String data = Data.getImmunization(districtId, monthId)
-
 		return coverageResult;
 	}
 	
@@ -249,11 +245,9 @@ public class CoverageFragment extends Fragment {
 		    }
 			
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			String message = e.getMessage();
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
 			String message = e.getMessage();

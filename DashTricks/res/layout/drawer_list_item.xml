@@ -4,4 +4,5 @@
           android:layout_height="70dp"
           android:textSize="26sp"
           android:text="New Text"
-          android:id="@+id/textView"/>
+          android:textColor="#88FFFFFF"
+          android:id="@+id/drawerListItem"/>

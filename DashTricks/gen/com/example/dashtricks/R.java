@@ -39,12 +39,12 @@ public final class R {
         public static final int button_load=0x7f09000b;
         public static final int content_frame=0x7f090001;
         public static final int district_list=0x7f090003;
+        public static final int drawerListItem=0x7f090004;
         public static final int drawer_layout=0x7f090000;
         public static final int left_drawer=0x7f090002;
         public static final int sideBar1=0x7f090008;
         public static final int spinner1=0x7f090009;
         public static final int spinner2=0x7f09000a;
-        public static final int textView=0x7f090004;
         public static final int webView1=0x7f090007;
         public static final int webView2=0x7f09000c;
         public static final int webView3a=0x7f090005;
@@ -57,6 +57,7 @@ public final class R {
         public static final int fragment_cold_chain=0x7f030003;
         public static final int fragment_coverage=0x7f030004;
         public static final int fragment_stock=0x7f030005;
+        public static final int spinner_item=0x7f030006;
     }
     public static final class menu {
         public static final int main=0x7f080000;
