@@ -133,7 +133,7 @@ public class CoverageFragment extends Fragment {
 			JSONParser parser = new JSONParser();
 			try {
 				JSONObject districtObj = (JSONObject) parser.parse(coverageByVaccine);
-				JSONArray districts = (JSONArray) districtObj.get("districtCoverage");
+				JSONArray districts = (JSONArray) districtObj.get("immunization");
 				
 				coverageResult = districts.toJSONString();
 			} catch (ParseException e) {
@@ -141,12 +141,12 @@ public class CoverageFragment extends Fragment {
 				Log.i("CoverageData", e.getMessage());
 			}
 	        // load the appropriate webpage from the assets folder
-			String html = loadFile("bargraph.html");
-			Log.v("html", html);
-			mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("bargraph.html"), "text/html", "UTF-8", null);
-//	        mWebView.loadUrl("file:///android_asset/bargraph.html");
+//			String html = loadFile("bargraph.html");
+//			Log.v("html", html);
+//			mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("bargraph.html"), "text/html", "UTF-8", null);
+	        mWebView.loadUrl("file:///android_asset/bargraph2.html");
 //	        mWebView.loadUrl("javascript:" + loadFile("spin.js"));
-	        mWebView.loadUrl("javascript:window.onload=function(){loadData('" + coverageResult +"')}");
+//	        mWebView.loadUrl("javascript:window.onload=function(){loadData('" + coverageResult +"')}");
 		} else if (functionId == 1){
 		    // by sub-district
 			// TODO replace 1 with result of first spinner
