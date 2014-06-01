@@ -133,12 +133,15 @@ public class DistrictActivityDr extends Activity {
 		Fragment fragment = null;
 		switch(position) {
 			case 0:
-				fragment = new CoverageFragment();
+				fragment = new DistrictFragment();
 				break;
 			case 1:
-				fragment = new ColdChainFragment();
+				fragment = new CoverageFragment();
 				break;
 			case 2:
+				fragment = new ColdChainFragment();
+				break;
+			case 3:
 				fragment = new StockFragment();
 				break;
 		}
