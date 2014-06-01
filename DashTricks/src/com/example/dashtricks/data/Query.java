@@ -3,6 +3,7 @@ package com.example.dashtricks.data;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -171,20 +172,22 @@ public class Query {
 		String groupby = "v." + VaccineTable.NAME;
 
 		Cursor cur = query.query(database, column, where, null, groupby, null, null);
-		
-		List<String> list = new ArrayList<String>();
-		cur.moveToFirst();
-		while(!cur.isAfterLast()){
+		Log.v("jian", "before string build");
+		Log.v("jian", "Rows: " + cur.getCount());
+		List<String> list = new LinkedList<String>();
+//		cur.moveToFirst();
+		while(cur.moveToNext()){
 			String temp = "{ \"name\" : \"" + cur.getString(0) + "\", \"coverage\" : " + cur.getInt(1) + "}";  
 			list.add(temp);			
 			//Log.e("Query.java ", temp);
-			cur.moveToNext();
+//			cur.moveToNext();
 		}
 		cur.close();
+		Log.v("jian", "after string build");
 
 		res += buildString(list) + "]}";
-		Log.v("jian", "End");
 		immu.put(districtID, res);
+		Log.v("jian", "End");
 		return res;
 	}
 	/*

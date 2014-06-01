@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.util.Log;
 
 import com.example.dashtricks.data.Query;
 
@@ -106,5 +107,10 @@ public class StockFragment extends Fragment {
 		
 		return stockLevel;
 	
+	}
+	
+	@JavascriptInterface
+	public void registerClick(String id) {
+		Log.v("Map Clicked", "Subdistrict ID: " + id);
 	}
 }

@@ -1,12 +1,21 @@
 package com.example.dashtricks;
  
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Scanner;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -122,7 +131,7 @@ public class CoverageFragment extends Fragment {
 		if (functionId == 0 || vaccineId==0) {
 			// by vaccine
 			// TODO have this query be yearly not for a specific month
-			String coverageByVaccine = q.getImmunization(distId, 1);
+			String coverageByVaccine = q.getImmunization(distId);
 			
 			JSONParser parser = new JSONParser();
 			try {
@@ -135,7 +144,12 @@ public class CoverageFragment extends Fragment {
 				Log.i("CoverageData", e.getMessage());
 			}
 	        // load the appropriate webpage from the assets folder
-	        mWebView.loadUrl("file:///android_asset/bargraph.html");
+			String html = loadFile("bargraph.html");
+			Log.v("html", html);
+			mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("bargraph.html"), "text/html", "UTF-8", null);
+//	        mWebView.loadUrl("file:///android_asset/bargraph.html");
+//	        mWebView.loadUrl("javascript:" + loadFile("spin.js"));
+	        mWebView.loadUrl("javascript:window.onload=function(){loadData('" + coverageResult +"')}");
 		} else if (functionId == 1){
 		    // by sub-district
 			// TODO replace 1 with result of first spinner
@@ -180,5 +194,49 @@ public class CoverageFragment extends Fragment {
 	    // String data = Data.getImmunization(districtId, monthId)
 
 		return coverageResult;
+	}
+	
+	public String loadFile(String name) {
+		String string = new String();
+		try {
+			Activity a = this.getActivity();
+			AssetManager assetManager = a.getAssets();
+			//String[] files = assetManager.list("");
+			InputStream input = assetManager.open(name);
+			
+		    StringBuilder fileContents = new StringBuilder();
+		    Scanner scanner = new Scanner(input);
+		    String lineSeparator = System.getProperty("line.separator");
+
+		    try {
+		        while(scanner.hasNextLine()) {        
+		            fileContents.append(scanner.nextLine() + lineSeparator);
+		        }
+		        string = fileContents.toString();
+		        return string;
+		    } finally {
+		        scanner.close();
+		    }
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			String message = e.getMessage();
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			String message = e.getMessage();
+			e.printStackTrace();
+		}
+		return string;
+	}
+	
+	@JavascriptInterface
+	public void registerClick(String data) {
+		//Log.d(TAG, "getData() called");
+	    // String data = Data.getImmunization(districtId, monthId)
+
+		Log.v("bar clicked", data);
 	}
 }
