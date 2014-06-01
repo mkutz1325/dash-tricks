@@ -111,6 +111,7 @@ December,5
     }
 
     var data = android.getData()
+    data = JSON.parse(data);
 
     xscale.domain(data.map(function(d) { return d.month; }));
     yscale.domain([-3, Math.max(d3.max(data, function(d) { return d.coverage; }),10)]);
