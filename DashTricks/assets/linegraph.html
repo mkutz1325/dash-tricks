@@ -106,14 +106,14 @@ December,5
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     function type(d) {
-      d.value = +d.value; // coerce to number
+      d.coverage = +d.coverage; // coerce to number
       return d;
     }
 
-    var data = d3.csv.parse(d3.select("#csvdatamax").html(), type);
+    var data = android.getData()
 
     xscale.domain(data.map(function(d) { return d.month; }));
-    yscale.domain([-3, Math.max(d3.max(data, function(d) { return d.value; }),10)]);
+    yscale.domain([-3, Math.max(d3.max(data, function(d) { return d.coverage; }),10)]);
 
     chart.append("g")
       .attr("class", "x axis")
@@ -126,7 +126,7 @@ December,5
 
     var line = d3.svg.line()
                   .x(function (d) { return xscale(d.month) + xscale.rangeBand() / 2})
-                  .y(function (d) { return yscale(d.value)});
+                  .y(function (d) { return yscale(d.coverage)});
 
     chart.append("path")
       .datum(data)
@@ -137,10 +137,10 @@ December,5
         .data(data)
       .enter().append("g").each( function(d) {
         var xVal = xscale(d.month) + xscale.rangeBand() / 2;
-        var yVal = yscale(d.value);
+        var yVal = yscale(d.coverage);
         var widthVal = xscale.rangeBand();
         d3.select(this).append("circle")
-          .attr("class", function(d) { return d.value < 8 ? "point" : "point warning"})
+          .attr("class", function(d) { return d.coverage < 8 ? "point" : "point warning"})
           .attr("cx", xVal)
           .attr("cy", yVal)
           .attr("r", "5px");
@@ -157,10 +157,10 @@ December,5
         .data(data)
       .enter().append("g").each( function(d) {
         var xVal = xscale(d.month) + xscale.rangeBand() / 2;
-        var yVal = yscale(d.value);
+        var yVal = yscale(d.coverage);
         var widthVal = xscale.rangeBand();
         d3.select(this).append("circle")
-          .attr("class", function(d) { return d.value > 1 ? "point" : "point warning"})
+          .attr("class", function(d) { return d.coverage > 1 ? "point" : "point warning"})
           .attr("cx", xVal)
           .attr("cy", yVal)
           .attr("r", "5px");

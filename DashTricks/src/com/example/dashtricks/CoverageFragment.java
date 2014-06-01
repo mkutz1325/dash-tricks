@@ -189,7 +189,7 @@ public class CoverageFragment extends Fragment {
 				Log.i("CoverageData", e.getMessage());
 			}
 	        // load the appropriate webpage from the assets folder
-	        mWebView.loadUrl("file:///android_asset/bargraph4.html");
+	        mWebView.loadUrl("file:///android_asset/linegraph.html");
 		}
     }
     
