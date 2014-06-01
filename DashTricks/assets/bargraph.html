@@ -47,13 +47,38 @@
   <svg class="chart">
   </svg>
 
-  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="file:///android_asset/d3.js" charset="utf-8"></script>
+  <script src="file:///android_asset/spin.js" charset="utf-8"></script>
+
   
   </head>
   <body>
+    <div id='spinner'>
+    </div>
   </body>
 
   <script>
+
+    var opts = {
+      lines: 13, // The number of lines to draw
+      length: 20, // The length of each line
+      width: 6, // The line thickness
+      radius: 37, // The radius of the inner circle
+      corners: 1, // Corner roundness (0..1)
+      rotate: 0, // The rotation offset
+      direction: 1, // 1: clockwise, -1: counterclockwise
+      color: '#000', // #rgb or #rrggbb or array of colors
+      speed: 1, // Rounds per second
+      trail: 60, // Afterglow percentage
+      shadow: false, // Whether to render a shadow
+      hwaccel: false, // Whether to use hardware acceleration
+      className: 'spinner', // The CSS class to assign to the spinner
+      zIndex: 2e9, // The z-index (defaults to 2000000000)
+      top: '50%', // Top position relative to parent
+      left: '50%' // Left position relative to parent
+    };
+    var target = document.getElementById('spinner');
+    var spinner = new Spinner(opts).spin(target);
 
     var windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     var windowHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
@@ -87,43 +112,56 @@
       return d;
     }
 
-    var data = android.getData();
-    data = JSON.parse(data);
-    //document.write(data);
+    function loadData(androidData) {
+      console.log(androidData);
+      var data = androidData;
+      data = JSON.parse(data);
+      //document.write(data);
 
-    xscale.domain(data.map(function(d) { return d.name; }));
-    yscale.domain([0, Math.max(d3.max(data, function(d) { return d.coverage; }),110)]);
+      drawGraph(data);
+    }
 
-    chart.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+    function drawGraph(data) {
 
-    chart.append("g")
-      .attr("class", "y axis")
-      .call(yAxis);
+      xscale.domain(data.map(function(d) { return d.name; }));
+      yscale.domain([0, Math.max(d3.max(data, function(d) { return d.coverage; }),110)]);
 
-    chart.selectAll(".bar")
-        .data(data)
-      .enter().append("g").each( function(d) {
-        var xVal = xscale(d.name);
-        var yVal = yscale(d.coverage);
-        var heightVal = height - yscale(d.coverage);
-        var widthVal = xscale.rangeBand();
-        d3.select(this).append("rect")
-          .attr("class", function(d) { return d.coverage > 80 ? "bar" : "bar warning"})
-          .attr("x", xVal)
-          .attr("y", yVal)
-          .attr("height", heightVal)
-          .attr("width", widthVal)
-        d3.select(this).append("text")
-          .attr("class", "bartext")
-          .attr("x", xVal + widthVal / 2)
-          .attr("y", yVal)
-          .attr("dx", "-.5em")
-          .attr("dy", "1em")
-          .text(function(d) { return d.coverage.toString() + "%"; });
-      });
+      chart.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+      chart.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+      chart.selectAll(".bar")
+          .data(data)
+        .enter().append("g").each( function(d) {
+          var xVal = xscale(d.name);
+          var yVal = yscale(d.coverage);
+          var heightVal = height - yscale(d.coverage);
+          var widthVal = xscale.rangeBand();
+          d3.select(this).append("rect")
+            .attr("class", function(d) { return d.coverage > 80 ? "bar" : "bar warning"})
+            .attr("x", xVal)
+            .attr("y", yVal)
+            .attr("height", heightVal)
+            .attr("width", widthVal)
+            .on("click", clicked)
+          d3.select(this).append("text")
+            .attr("class", "bartext")
+            .attr("x", xVal + widthVal / 2)
+            .attr("y", yVal)
+            .attr("dx", "-.5em")
+            .attr("dy", "1em")
+            .text(function(d) { return d.coverage.toString() + "%"; });
+        });
+      }
+
+    function clicked(d) {
+      android.registerClick(JSON.stringify(d));
+    }
 
     
 
