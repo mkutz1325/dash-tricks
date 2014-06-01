@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+
+    body {
+      margin: 0px;
+    }
+
+    .bar {
+      fill: DeepSkyBlue;
+    }
+
+    .bar.end {
+      fill: blue;
+    }
+
+    .bartext {
+      fill: white;
+      font: 14px sans-serif;
+    }
+
+    .line {
+      fill: none;
+      stroke-width: 1.5px;
+    }
+
+    .line.tranparent {
+      opacity: .18;
+    }
+
+    .classLine {
+      fill: none;
+      stroke: black;
+      stroke-dasharray: 5,15;
+      stroke-width: .5px;
+    }
+
+    .axis text {
+      font: 14px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    .x.axis line {
+      display: none;
+    }
+
+    .xmarks.axis text, .xmarks.axis path {
+      display: none;
+    }
+  </style>
+
+  <svg class="graph">
+  </svg>
+
+  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  
+  </head>
+  <body>
+  </body>
+
+  <script>
+
+    // gets the window size for fitting
+    var windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
+    var windowHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+
+    // sets the margin to a reasonable ammount
+    var margin = {top: 20, right: 30, bottom: 30, left: 40},
+        width = windowWidth - margin.left - margin.right,
+        height = windowHeight - margin.top - margin.bottom;
+
+    // adds a graph element to the svg on the page
+    var graph = d3.select(".graph")
+          .attr("width", width + margin.left + margin.right)
+          .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    // get the graph data from android
+    // var graphData = JSON.parse(android.getData());
+    var graphData = {
+                  type: "bar",
+                  yscale: {
+                    rangeUpper: 120,
+                    rangeLower: 0,
+                    warnUpper: 80
+                  },
+                  xscale: {
+                    domain: ["January", "Febuary", "March", "April", "May", "June"]
+                  },
+                  color: ["#FFAABB"],
+                  warnColor: ["#003322"],
+                  time: [
+                    {
+                      name: "",
+                      data: [
+                        {
+                          key: "BGV",
+                          value: [50,60,70,80,70,80]
+                        },
+                        {
+                          key: "PENTA",
+                          value: [80,40,30,45,55,70]
+                        },
+                        {
+                          key: "MEAS",
+                          value: [34,47,29,76,83,57]
+                        },
+                        {
+                          key: "HAP",
+                          value: [-10,140,130,39,48,39]
+                        },
+                        {
+                          key: "TUO",
+                          value: [45,69,80,87,45,74]
+                        },
+                        {
+                          key: "RET",
+                          value: [70,92,39,5,40,86]
+                        }
+                      ]
+                    }
+                  ]
+                };
+
+    // the translation from data to pixel values on the yaxis
+    var yscale = d3.scale.linear()
+      .range([height, 0]);
+
+    // the drawn xaxis
+    var xAxis = d3.svg.axis()
+      .orient("bottom");
+
+    // the drawn yaxis
+    var yAxis = d3.svg.axis()
+      .scale(yscale)
+      .orient("left");
+
+    // create a time graph or a bar graph
+    if (graphData.type == "time") {
+
+      //
+      // Time series graph
+      //
+
+      var data = graphData.time[0].data;
+
+      // the translation from data to pixel values on the xaxis
+      var xscale = d3.scale.ordinal()
+        .rangePoints([0, width], .1);
+
+      xAxis.scale(xscale);
+
+      // set the input values for scale translations
+      xscale.domain(graphData.xscale.domain.map(function(d) { return d; }));
+      yscale.domain([ Math.min(d3.min(data, function(d) { return d3.min(d.value); }), graphData.yscale.rangeLower)
+                    , Math.max(d3.max(data, function(d) { return d3.max(d.value); }), graphData.yscale.rangeUpper)]);
+
+      // translates data points to x values
+      function pointX (d, i) {
+        return xscale(xscale.domain()[i]);
+      }
+
+      function pointY (d, i) {
+        return yscale(d);
+      }
+
+      var line = d3.svg.line()
+                    .x(pointX)
+                    .y(pointY);
+
+      // append the x and y axis
+      graph.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+      graph.append("g")
+        .attr("class", "y axis")
+        .call(yAxis);
+
+      // nest data by category
+      var categories = d3.nest()
+        .key(function(d) { return d.key; })
+        .entries(data);
+
+
+      var g = graph.selectAll()
+        .data(data)
+      .enter().append("g")
+        .attr("class", "category")
+        .attr("type", function(d) {
+          return d.key;
+        });
+
+      // set color for each category
+      var colorScale = d3.scale.category10();
+      
+
+      // draw path for each category
+      g.each(function(d, i) {
+        var e = d3.select(this);
+
+        e.append("path")
+            .attr("class", "line")
+            .attr("stroke", colorScale(i))
+            .attr("d", function(d) { return line(d.value); })
+            .on("click", reportClick);
+      });
+
+    } else if (graphData.type == "bar") {
+
+      //
+      // Bar type graph
+      //
+
+      var data = graphData.time[0].data;
+
+      // the translation from data to pixel values on the xaxis
+      var xscale = d3.scale.ordinal()
+        .rangeRoundBands([0, width], .1);
+
+      xAxis.scale(xscale);
+
+      // set the input values for scale translations
+      xscale.domain(data.map(function(d) { return d.key; }));
+      yscale.domain([ Math.min(d3.min(data, function(d) { return d3.min(d.value); }), graphData.yscale.rangeLower)
+                    , Math.max(d3.max(data, function(d) { return d3.max(d.value); }), graphData.yscale.rangeUpper)]);
+
+      // append the x and y axis
+      graph.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+      graph.append("g")
+        .attr("class", "y axis")
+        .call(yAxis); 
+
+      // create tick marks dividing x axis values
+      var xmarksScale = d3.scale.ordinal()
+            .rangePoints([0, width], .1)
+            .domain(d3.range(0,data.length + 1));
+
+      var xmarks = d3.svg.axis()
+          .scale(xmarksScale)
+          .orient("top")
+          .tickSize(10)
+          .ticks(data.length);
+
+      graph.append("g")
+        .attr("class", "xmarks axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xmarks);
+
+
+      // append the bar graph
+
+      graph.selectAll(".bar")
+        .data(data)
+      .enter().append("g").each( function(d) {
+
+        // for each value in this data create a bar and append it
+
+        var widthVal = xscale.rangeBand() / d.value.length;
+        for (var index = 0; index < d.value.length; index++) {
+          var heightVal = height - yscale(d.value[index]);
+
+          d3.select(this).append("rect")
+            .attr("class", "bar")
+            .attr("x", xscale(d.key) + widthVal * index)
+            .attr("y", yscale(d.value[index]))
+            .attr("height", heightVal)
+            .attr("width", widthVal)
+            .on("click", reportClick);
+        }
+
+      });
+
+      
+
+
+    }
+
+    function reportClick (data) {
+        console.log(data);
+      }
+
+    
+
+  </script>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
