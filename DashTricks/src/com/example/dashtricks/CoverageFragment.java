@@ -176,7 +176,7 @@ public class CoverageFragment extends Fragment {
 		} else {
 			// monthly
 			//TODO this doesn't work, but not worth the effort until new query received
-			String coverageByMonth = q.getMonthlyVaccCover(vaccineId, distId);
+			String coverageByMonth = q.getMonthlyVaccCover(distId, vaccineId);
 			JSONParser parser = new JSONParser();
 			try {
 				JSONObject districtObj = (JSONObject) parser.parse(coverageByMonth);
