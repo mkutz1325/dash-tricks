@@ -280,7 +280,7 @@ public class CoverageFragment extends Fragment {
 	// get the stock level data
 	@JavascriptInterface
 	public String getStockData() {
-		return "{name: BCG, value: 46}";
+		return "{\"name\":\"BCG\",\"value\":\"46\"}";
 	}
 	
 	private void showDetail(boolean show) {
@@ -300,6 +300,14 @@ public class CoverageFragment extends Fragment {
 			        loadDataToWebView();
 			    }
 			});
+			WebView stockView = (WebView) rootView.findViewById(R.id.smallWebView);
+			stockView.addJavascriptInterface(this, "android");
+			// enable javascript
+			stockView.getSettings().setJavaScriptEnabled(true);
+			stockView.loadUrl("file:///android_asset/circlegraph.html");
+			//loadDataToWebView();
+			//stockView.loadUrl("http://www.google.com");
+			
 		} else {
 			View rootView = this.getView();
 			TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
