@@ -25,8 +25,8 @@
 
   </style>
 
-  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="file:///android_asset/d3.js" charset="utf-8"></script>
+  <script src="file:///android_asset/topojson.js" charset="utf-8"></script>
   
   </head>
   <body>
@@ -70,15 +70,14 @@
   var zoom = d3.behavior.zoom()
     .translate([0, 0])
     .scale(1)
-    .scaleExtent([1, 8])
+    .scaleExtent([1, 100])
     .on("zoom", zoomed);
 
   var g = svg.append("g");
 
-  svg.call(zoom.event);
-
-  var beforeload = new Date();
-  console.log("beforeload from start: " + (beforeload-start));
+  svg
+    .call(zoom)
+    .call(zoom.event);
 
   var tza = JSON.parse(android.getData());
   var coverage = JSON.parse(android.getCoverage());
@@ -87,30 +86,27 @@
 
   console.log("District id: " + distID);
 
-  var coverageByName = {};
+  var coverageByID = {};
   var maxCoverage = -1;
   var minCoverage = 100000;
   console.log("Length: " + coverage.length);
   for (var index = 0; index < coverage.length; index++) {
-    coverageByName[coverage[index].subDistrict_name] = +coverage[index].min_coverage;
-    console.log(+coverage[index].min_coverage);
-    maxCoverage = Math.max(maxCoverage, +coverage[index].min_coverage);
-    minCoverage = Math.min(minCoverage, +coverage[index].min_coverage);
+    var id = coverage[index].subDistrict_id;
+    coverageByID[id] = +coverage[index].min_coverage;
+    console.log(coverageByID[id]);
+    maxCoverage = Math.max(maxCoverage, coverageByID[id]);
+    minCoverage = Math.min(minCoverage, coverageByID[id]);
   }
 
-  var color = d3.scale.linear()
-                .domain([minCoverage, maxCoverage])
-                .range(["#ff0000", "#eeeeee"]);
-
-  var afterload = new Date();
-  console.log("time to load: " + (afterload-beforeload));
+  var color = d3.scale.threshold()
+      .domain([65])
+      .range(["red", "blue"]);
 
   console.log(tza);
 
   // set the center to the centroid
   // projection.center(projection.invert(path.centroid(topojson.feature(tza, tza.objects.TZA_adm0_subunits).features[0])))
 
-  var beforeFilter = new Date();
 
   var districts = {};
   for (var index = 0; index < tza.objects.TZA_adm2_subunits.geometries.length; index++) {
@@ -133,10 +129,6 @@
     subdistricts[id2].geometries.push(object);
   }
 
-  var afterFilter = new Date();
-  console.log("time to filter: " + (afterFilter-beforeFilter));
-
-  var beforeFeature = new Date();
 
   var feat = topojson.feature(tza, districts[distID]);
 
@@ -156,44 +148,21 @@
     .attr("d", path)
     .attr("class", "feature")
     .attr("fill", function(d) { 
-      console.log("Color: " + color(coverageByName[d.properties.NAME_3]));
-      return color(coverageByName[d.properties.NAME_3]); 
+      console.log("Color: " + color(coverageByID[d.properties.ID_3]));
+      return color(coverageByID[d.properties.ID_3]);
     })
-    .attr("id", function(d) { 
-      return "id" + d.properties.ID_3.toString() 
-    });
+    .attr("id", function(d) { return "id" + d.properties.ID_3.toString() })
+    .on("click", clicked);
 
   g.append("path")
     .datum(topojson.mesh(tza, subdistricts[distID], function(a, b) { return a !== b; }))
     .attr("class", "mesh")
     .attr("d", path);
 
-  var afterFeature = new Date();
-  console.log("time to feature: " + (afterFeature-beforeFeature));
-
-  var beforeMesh = new Date();
-
-  // g.append("path")
-  //   .datum(topojson.mesh(tza, tza.objects.TZA_adm2_subunits, function(a, b) { return a !== b; }))
-  //   .attr("class", "mesh")
-  //   .attr("d", path);
-
-  var afterMesh = new Date();
-  console.log("time to mesh: " + (afterMesh-beforeMesh));
-
-    // svg.append("g")
-    //     .attr("class", "adm0")
-    //   .selectAll("path")
-    //     .data(topojson.feature(tza, tza.objects.TZA_adm0_subunits).features)
-    //   .enter().append("path")
-    //     .attr("d", path)
-    //   .on("click", click);
-
   focus(feat);
 
 
   function focus(d) {
-    var beforeClick = new Date();
 
     var bounds = path.bounds(d),
         dx = bounds[1][0] - bounds[0][0],
@@ -205,14 +174,15 @@
 
     svg.call(zoom.translate(translate).scale(scale).event);
 
-    var afterClick = new Date();
-    console.log("time to click: " + (afterClick-beforeClick));
-
   }
 
   function zoomed() {
     g.style("stroke-width", 1.5 / d3.event.scale + "px");
     g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+  }
+
+  function clicked(d) {
+    android.registerClick(d.properties.ID_3);
   }
 
   </script>
