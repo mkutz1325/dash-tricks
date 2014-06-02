@@ -116,7 +116,7 @@ public class CoverageFragment extends Fragment {
 		Button button = (Button) rootView.findViewById(R.id.button_load);
 		button.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
-		        //loadDataToWebView();
+		        loadDataToWebView();
 		    	registerClick(null);
 		    }
 		});

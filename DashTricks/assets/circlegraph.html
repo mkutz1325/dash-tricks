@@ -3,6 +3,12 @@
   <head>
   <style>
 
+    body {
+      margin: 0px;
+      overflow: hidden;
+      /*border: 5px solid red;*/
+    }
+
     .greypath {
       fill: lightgrey;
     }
@@ -46,6 +52,9 @@ BCG,37
   </body>
 
   <script>
+
+    // disable scrolling
+    document.ontouchmove = function(e){ e.preventDefault(); }
 
     var windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     var windowHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
@@ -93,7 +102,7 @@ BCG,37
     var total_label = center_group.append("svg:text")
         .attr("class", "label_value")
         .attr("text-anchor", "middle") // text-align: right
-        .attr("font-size", radiusCalc * .18 + "px")
+        .attr("font-size", radiusCalc * .2 + "px")
         .text(function(d) { return d.value + "%"; });
 
     function warning (d) {
@@ -116,14 +125,14 @@ BCG,37
         .attr("d", grey_arc)
         .attr("class", "greypath");
 
-    var inner_arc = d3.svg.arc()
-          .startAngle(0)
-          .endAngle(Math.PI * 2)
-          .innerRadius(innerR - 15)
-          .outerRadius(innerR - 10);
-    arc_group.append("svg:path")
-        .attr("d", inner_arc)
-        .attr("class", function(d) { return warning(d) + "innerpath";});
+    // var inner_arc = d3.svg.arc()
+    //       .startAngle(0)
+    //       .endAngle(Math.PI * 2)
+    //       .innerRadius(innerR - 15)
+    //       .outerRadius(innerR - 10);
+    // arc_group.append("svg:path")
+    //     .attr("d", inner_arc)
+    //     .attr("class", function(d) { return warning(d) + "innerpath";});
 
 
     paths.enter().append("svg:path")
@@ -135,7 +144,7 @@ BCG,37
         .attr("text-anchor", "middle") // text-align: right
         .attr("transform", "translate(" + (width/2) + "," + (height/2 + heightOffset) + ")")
         .attr("dy", nameOffset)
-        .attr("font-size", radiusCalc * .1 + "px")
+        .attr("font-size", radiusCalc * .15 + "px")
         .text(function(d) { return d.name;});
 
 

@@ -98,9 +98,9 @@
     minCoverage = Math.min(minCoverage, coverageByID[id]);
   }
 
-  var color = d3.scale.linear()
-      .domain([0, .33, .66, 1].map(d3.interpolate(minCoverage, maxCoverage)))
-      .range(["#cb181d", "#fb6a4a", "#fcae91", "#fee5d9"]);
+  var color = d3.scale.threshold()
+      .domain([65])
+      .range(["red", "blue"]);
 
   console.log(tza);
 
