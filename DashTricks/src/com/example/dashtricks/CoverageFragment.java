@@ -182,7 +182,7 @@ public class CoverageFragment extends Fragment {
 	        // load the appropriate webpage from the assets folder
 	        //mWebView.loadUrl("file:///android_asset/bargraph2.html");
 	        // do this in a map
-	        mWebView.loadUrl("file:///android_asset/map.html");
+	        mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("map.html"), "text/html", "UTF-8", null);
 		} else {
 			// monthly
 			String coverageByMonth = q.getMonthlyVaccCover(distId, vaccineId);
@@ -274,10 +274,10 @@ public class CoverageFragment extends Fragment {
 		}
 		functionId = 1;
 		loadDataToWebView();*/
-		View rootView = this.getView();
-		TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
-		vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		vaccineDetail.setText("Vaccine Name");
+//		View rootView = this.getView();
+//		TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
+//		vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+//		vaccineDetail.setText("Vaccine Name");
 /*		Button newButton = new Button(this.getActivity());
 		newButton.setText("Show by Subdistrict");*/
 		Log.v("bar clicked", data);
