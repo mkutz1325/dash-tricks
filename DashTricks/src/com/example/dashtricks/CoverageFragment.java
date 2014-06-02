@@ -88,6 +88,7 @@ public class CoverageFragment extends Fragment {
 		mWebView.addJavascriptInterface(this, "android");
 		// enable javascript
 		mWebView.getSettings().setJavaScriptEnabled(true);
+		mWebView.loadUrl("about:blank");
 		
 		/* Spinner for choosing the vaccine to focus in on */
 		Spinner vaccineDropDown = (Spinner) rootView.findViewById(R.id.spinner1);
@@ -127,11 +128,16 @@ public class CoverageFragment extends Fragment {
     
     public void loadDataToWebView() {
     	// data stuff
+    	mWebView.loadUrl("about:blank");
+    	mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("spinner.html"), "text/html", "UTF-8", null);
+    	
 		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
 		Query q = state.getQuery();
 		DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
 		String districtId = d.getDistrictId();
 		Integer distId = Integer.parseInt(districtId);
+		
+		
 		
 		if (functionId == 0 || vaccineId==0) {
 			// by vaccine
@@ -148,8 +154,8 @@ public class CoverageFragment extends Fragment {
 				Log.i("CoverageData", e.getMessage());
 			}
 	        // load the appropriate webpage from the assets folder
+			mWebView.loadUrl("about:blank");
 			mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("bargraph.html"), "text/html", "UTF-8", null);
-	        mWebView.loadUrl("javascript:window.onload=function(){loadData('" + coverageResult +"')}");
 		} else if (functionId == 1){
 		    // by sub-district
 			// TODO replace 1 with result of first spinner
@@ -193,7 +199,7 @@ public class CoverageFragment extends Fragment {
 				Log.i("CoverageData", e.getMessage());
 			}
 	        // load the appropriate webpage from the assets folder
-	        mWebView.loadUrl("file:///android_asset/linegraph.html");
+			mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("linegraph.html"), "text/html", "UTF-8", null);
 		}
     }
     
