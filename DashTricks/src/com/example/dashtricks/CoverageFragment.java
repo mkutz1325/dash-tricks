@@ -21,7 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
+import android.widget.LinearLayout.LayoutParams;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.AdapterView;
@@ -59,6 +59,7 @@ public class CoverageFragment extends Fragment {
 		public void onItemSelected(AdapterView<?> parent, View view, 
 	            int pos, long id) {
 	        // An item was selected. You can retrieve the selected item using
+	    	showDetail(false);
 	    	if (type == 0) {
 	    		vaccineId = pos;
 	    	} else {
@@ -114,7 +115,8 @@ public class CoverageFragment extends Fragment {
 		Button button = (Button) rootView.findViewById(R.id.button_load);
 		button.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
-		        loadDataToWebView();
+		        //loadDataToWebView();
+		    	registerClick(null);
 		    }
 		});
 		
@@ -268,12 +270,42 @@ public class CoverageFragment extends Fragment {
 		}
 		functionId = 1;
 		loadDataToWebView();*/
-		View rootView = this.getView();
-		TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
-		vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-		vaccineDetail.setText("Vaccine Name");
+
 /*		Button newButton = new Button(this.getActivity());
 		newButton.setText("Show by Subdistrict");*/
-		Log.v("bar clicked", data);
+		//Log.v("bar clicked", data);
+		showDetail(true);
+	}
+	
+	// get the stock level data
+	@JavascriptInterface
+	public String getStockData() {
+		return "{name: BCG, value: 46}";
+	}
+	
+	private void showDetail(boolean show) {
+		if (show) {
+			int vaccId = 1;
+			String vaccName = "BCG";
+			View rootView = this.getView();
+			TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
+			vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			vaccineDetail.setText(vaccName);
+			Button showBySub = (Button) rootView.findViewById(R.id.bySub);
+			showBySub.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			vaccineId = vaccId;
+			showBySub.setOnClickListener(new View.OnClickListener() {
+			    public void onClick(View v) {
+			    	functionId = 1;
+			        loadDataToWebView();
+			    }
+			});
+		} else {
+			View rootView = this.getView();
+			TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
+			vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
+			Button showBySub = (Button) rootView.findViewById(R.id.bySub);
+			showBySub.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
+		}
 	}
 }

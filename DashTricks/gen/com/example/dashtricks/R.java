@@ -34,11 +34,12 @@ public final class R {
         public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
-        public static final int action_notifications=0x7f09000f;
-        public static final int action_settings=0x7f090010;
-        public static final int button_load=0x7f09000c;
+        public static final int action_notifications=0x7f090010;
+        public static final int action_settings=0x7f090011;
+        public static final int button_load=0x7f09000d;
+        public static final int bySub=0x7f09000c;
         public static final int content_frame=0x7f090001;
-        public static final int districtText=0x7f09000d;
+        public static final int districtText=0x7f09000e;
         public static final int district_list=0x7f090003;
         public static final int drawerListItem=0x7f090004;
         public static final int drawer_layout=0x7f090000;
@@ -48,7 +49,7 @@ public final class R {
         public static final int spinner2=0x7f09000a;
         public static final int vaccineName=0x7f09000b;
         public static final int webView1=0x7f090007;
-        public static final int webView2=0x7f09000e;
+        public static final int webView2=0x7f09000f;
         public static final int webView3a=0x7f090005;
         public static final int webView3b=0x7f090006;
     }
@@ -74,6 +75,7 @@ public final class R {
         public static final int coverage_section=0x7f060001;
         public static final int drawer_close=0x7f060007;
         public static final int drawer_open=0x7f060006;
+        public static final int showBySub=0x7f060009;
         public static final int stock_section=0x7f060003;
     }
     public static final class style {

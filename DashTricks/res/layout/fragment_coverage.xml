@@ -44,6 +44,18 @@
     	    android:layout_height="0dp"
     	    android:background="#881111FF"
     	    android:textSize="20sp"
+    	    android:textColor="#FFFFFF"
+    	    android:padding="20dp"
+	        android:layout_marginBottom="2dp" />
+    	
+    	<Button
+    	    android:id="@+id/bySub"
+    	    android:layout_width="fill_parent"
+    	    android:layout_height="0dp"
+    	    android:background="#881111FF"
+    	    android:textSize="20sp"
+    	    android:text="@string/showBySub"
+    	    android:textColor="#FFFFFF"
     	    android:padding="20dp"
 	        android:layout_marginBottom="2dp" />
 
