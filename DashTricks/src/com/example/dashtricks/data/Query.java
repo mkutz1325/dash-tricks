@@ -93,6 +93,7 @@ return res;
 	public String getAllDistricts(){
 		Log.v("jian", "Start");
 		if(allDistrict.length() > 0){
+			Log.v("jian", "End");
 			return allDistrict;
 		}
 		String res = "{\"districts\": [";
@@ -131,6 +132,7 @@ return res;
 	public String getAllSubDistricts(int distID){
 		Log.v("jian", "Start");
 		if(subDistrict.containsKey(distID)){
+			Log.v("jian", "End");
 			return subDistrict.get(distID);
 		}
 		String res = "{\"subDistricts\": [";
@@ -174,6 +176,7 @@ return res;
 		Log.v("jian", "Start");
 		
 		if(immuByVacc.containsKey(districtID)){
+			Log.v("jian", "End");
 			return immuByVacc.get(districtID);
 		}
 		
@@ -227,6 +230,7 @@ return res;
 		
 		String key = districtID + ", " + vaccID;
 		if(getVaccCoverDist.containsKey(key)){
+			Log.v("jian", "End");
 			return getVaccCoverDist.get(key);
 		}
 		/*Cursor cur = database.rawQuery("Select d." + DistrictTable.NAME + ", v." + VaccineTable.NAME + ", a." + AggVaccineTable.MONTH + 
@@ -284,6 +288,7 @@ return res;
 	public String getDistrictFridgeCapacity(int districtID){
 		Log.v("jian", "Start");
 		if(distCapa.containsKey(districtID)){
+			Log.v("jian", "End");
 			return distCapa.get(districtID);
 		}
 		String res = "{\"fridge_capacity\":[";
@@ -341,6 +346,7 @@ return res;
 	public String getDistrictStockLevel(int districtID){
 		Log.v("Jian Query","Start");
 		if(distStock.containsKey(districtID)){
+			Log.v("jian", "End");
 			return distStock.get(districtID);
 		}
 		String res = "{\"vaccine_Stock_level\":[";
@@ -388,6 +394,7 @@ return res;
 		Log.v("jian", "Start");
 		String key = vID + ", " + districtID;
 		if(distCover.containsKey(key)){
+			Log.v("jian", "End");
 			return distCover.get(key);
 		}
 		String res = "{\"district_coverage\": [";
@@ -435,6 +442,7 @@ return res;
 		Log.v("jian", "Start");
 		String key = vID + ", " + subID;
 		if(subCover.containsKey(key)){
+			Log.v("jian", "End");
 			return subCover.get(key);
 		}
 		String res = "{\"subDistrcit_coverage\": [";
@@ -490,6 +498,7 @@ return res;
 		Log.v("jian", "Start");
 		String key = vacID + ", " + subID;
 		if(subCoverMonth.containsKey(key)){
+			Log.v("jian", "End");
 			return subCover.get(key);
 		}
 		String res = "{\"monthly_subDistrcit_coverage\": [";
@@ -538,6 +547,7 @@ return res;
 		Log.v("jian", "Start");
 		String key = facility_id + ", " + month;
 		if(monCover.containsKey(key)){
+			Log.v("jian", "End");
 			return monCover.get(key);
 		}
 		String res = "[";
@@ -580,6 +590,7 @@ return res;
 		Log.v("jian", "Start");
 		String key = facility_id + ", " + month + ", " + vaccine_id;
 		if(vaccMon.containsKey(key)){
+			Log.v("jian", "End");
 			return vaccMon.get(key);
 		}
 		String res = "[";
@@ -621,6 +632,7 @@ return res;
 	public String getYearlyCoverageRate(int facility_id){
 		Log.v("jian", "Start");
 		if(yearCover.containsKey(facility_id)){
+			Log.v("jian", "End");
 			return yearCover.get(facility_id);
 		}
 		String res = "[";
@@ -664,6 +676,7 @@ return res;
 		Log.v("jian", "Start");
 		String key = facility_id + ", " + month;
 		if(monStock.containsKey(key)){
+			Log.v("jian", "End");
 			return monStock.get(key);
 		}
 		String res = "[";
@@ -707,6 +720,7 @@ return res;
 	public String getYearlyStock(int facility_id){
 		Log.v("jian", "Start");
 		if(yearStock.containsKey(facility_id)){
+			Log.v("jian", "End");
 			return yearStock.get(facility_id);
 		}
 		String res = "[";

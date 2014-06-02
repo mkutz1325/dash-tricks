@@ -44,36 +44,10 @@
   <svg class="chart">
   </svg>
 
-  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <script src="file:///android_asset/d3.js" charset="utf-8"></script>
   
   </head>
   <body>
-<data id="csvdatamin">month,value
-January,2
-February,3
-March,3
-April,3
-June,2
-July,1
-August,2
-September,2
-October,3
-November,2
-December,3
-</data>
-<data id="csvdatamax">month,value
-January,8
-February,7
-March,8
-April,5
-June,7
-July,6
-August,8
-September,8
-October,6
-November,7
-December,5
-</data>
   </body>
 
   <script>
@@ -110,7 +84,8 @@ December,5
       return d;
     }
 
-    var data = android.getData()
+    var data = android.getData();
+    data = JSON.parse(data);
 
     xscale.domain(data.map(function(d) { return d.month; }));
     yscale.domain([-3, Math.max(d3.max(data, function(d) { return d.coverage; }),10)]);
