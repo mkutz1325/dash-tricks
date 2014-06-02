@@ -60,6 +60,8 @@ BCG,37
         nameOffset = radiusCalc/1.5 + heightOffset;
 
     var data = d3.csv.parse(d3.select("#csvdata").html(), type);
+    // var data = android.getStockData();
+    // data = JSON.parse(data);
 
     var chart = d3.select(".chart")
           .attr("width", width + margin.left + margin.right)
