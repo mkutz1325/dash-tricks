@@ -90,6 +90,7 @@ public class CoverageFragment extends Fragment {
 		    public void onClick(View v) {
 		    	functionId = 1;
 		        loadDataToWebView();
+		        showStockView(false);
 		    }
 		});
 		
@@ -98,6 +99,7 @@ public class CoverageFragment extends Fragment {
 		    public void onClick(View v) {
 		    	functionId = 0;
 		        loadDataToWebView();
+		        showStockView(false);
 		    }
 		});
 		
@@ -107,7 +109,8 @@ public class CoverageFragment extends Fragment {
 		    public void onClick(View v) {
 		    	functionId=-1;
 		        loadDataToWebView();
-		        showDetail(false, -1, null);
+		        showDetail(false, -1, null, -1);
+		        showStockView(false);
 		    }
 		});
 		
@@ -248,10 +251,12 @@ public class CoverageFragment extends Fragment {
 		//Log.d(TAG, "getData() called");
 		long vId = 0;
 		String vName = null;
+		long coverage = 0;
 		try {
 			JSONObject barData = (JSONObject) parser.parse(data);
 			vId = (Long) barData.get("id");
 			vName = (String) barData.get("name");
+			coverage = (Long) barData.get("coverage");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -267,17 +272,19 @@ public class CoverageFragment extends Fragment {
 	    context.runOnUiThread(new Runnable() {
 	    	private long vId;
 	    	private String vName;
+	    	private long coverage;
 	    	
 	        public void run() {
-	        	CoverageFragment.this.showDetail(true, vId, vName);
+	        	CoverageFragment.this.showDetail(true, vId, vName, coverage);
 	        }
 	        
-	        public Runnable init(long vId, String vName) {
+	        public Runnable init(long vId, String vName, long coverage) {
 	        	this.vId = vId;
 	        	this.vName = vName;
+	        	this.coverage = coverage;
 	        	return this;
 	        }
-	    }.init(vId, vName) );
+	    }.init(vId, vName, coverage) );
 	}
 	
 	// get the stock level data
@@ -286,8 +293,16 @@ public class CoverageFragment extends Fragment {
 		return "{\"name\":\"BCG\",\"value\":\"46\"}";
 	}
 	
+	/***
+	 * Shows or hides further options for vaccine exploration in the sidebar. 
+	 * 
+	 * @param show: if true, show, if false, hide
+	 * @param vaccId: vaccine id for more exploring
+	 * @param vaccName: name of this vaccine
+	 * @param coverage: the coverage rate for the vaccine
+	 */
 	@SuppressLint("SetJavaScriptEnabled")
-	private void showDetail(boolean show, long vaccId, String vaccName) {
+	private void showDetail(boolean show, long vaccId, String vaccName, long coverage) {
 		if (show) {
 			
 			vaccineId = (int) vaccId;
@@ -297,7 +312,7 @@ public class CoverageFragment extends Fragment {
 			instructions.setVisibility(View.GONE);
 			
 			TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
-			vaccineDetail.setText(vaccName);
+			vaccineDetail.setText(vaccName + ": " + coverage);
 			vaccineDetail.setVisibility(View.VISIBLE);
 			
 			Button showBySub = (Button) rootView.findViewById(R.id.bySub);
@@ -320,17 +335,26 @@ public class CoverageFragment extends Fragment {
 		}
 	}
 	
+	/***
+	 * Shows/Hides View showing further detail about stock wastage for a subDistrict.
+	 * 
+	 * @param show if true, show, otherwise, hide
+	 */
 	private void showStockView(boolean show) {
 		View rootView = this.getView();
 		WebView stockView = (WebView) rootView.findViewById(R.id.smallWebView);
+		TextView stockDesc = (TextView) rootView.findViewById(R.id.stockDesc);
 		if (show) {
 			stockView.setVisibility(View.VISIBLE);
+			stockDesc.setVisibility(View.VISIBLE);
+			stockDesc.setText("SubDistrict Stock Wastage");
 			stockView.addJavascriptInterface(this, "android");
 			// enable javascript
 			stockView.getSettings().setJavaScriptEnabled(true);
 			stockView.loadUrl("file:///android_asset/circlegraph.html");
 		} else {
-			stockView.setVisibility(View.VISIBLE);
+			stockView.setVisibility(View.GONE);
+			stockDesc.setVisibility(View.GONE);
 		}
 	}
 }

@@ -34,30 +34,31 @@ public final class R {
         public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
-        public static final int action_notifications=0x7f090018;
-        public static final int action_settings=0x7f090019;
+        public static final int action_notifications=0x7f090019;
+        public static final int action_settings=0x7f09001a;
         public static final int button_load=0x7f09000d;
         public static final int byMonth=0x7f09000c;
         public static final int bySub=0x7f09000b;
         public static final int content_frame=0x7f090001;
-        public static final int districtMap=0x7f09000f;
-        public static final int districtName=0x7f090010;
+        public static final int districtMap=0x7f090010;
+        public static final int districtName=0x7f090011;
         public static final int district_list=0x7f090003;
         public static final int drawerListItem=0x7f090004;
         public static final int drawer_layout=0x7f090000;
         public static final int instructions=0x7f090009;
         public static final int left_drawer=0x7f090002;
-        public static final int monthly_births=0x7f090013;
-        public static final int num_health_facilities=0x7f090016;
-        public static final int num_sub_districts=0x7f090015;
-        public static final int population=0x7f090012;
+        public static final int monthly_births=0x7f090014;
+        public static final int num_health_facilities=0x7f090017;
+        public static final int num_sub_districts=0x7f090016;
+        public static final int population=0x7f090013;
         public static final int sideBar1=0x7f090008;
-        public static final int smallWebView=0x7f09000e;
-        public static final int summary=0x7f090011;
-        public static final int surviving_infants_month=0x7f090014;
+        public static final int smallWebView=0x7f09000f;
+        public static final int stockDesc=0x7f09000e;
+        public static final int summary=0x7f090012;
+        public static final int surviving_infants_month=0x7f090015;
         public static final int vaccineName=0x7f09000a;
         public static final int webView1=0x7f090007;
-        public static final int webView2=0x7f090017;
+        public static final int webView2=0x7f090018;
         public static final int webView3a=0x7f090005;
         public static final int webView3b=0x7f090006;
     }
