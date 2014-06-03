@@ -13,6 +13,7 @@
 	<string name="showBySub">Show By Sub-District</string>
 	<string name="showByMonth">Show By Month</string>
 	<string name="instr">Select a Vaccine on the Chart for More Detail.</string>
+	<string name="summary">Summary</string>
     
 
 </resources>

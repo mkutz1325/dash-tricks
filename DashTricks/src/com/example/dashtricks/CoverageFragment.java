@@ -142,8 +142,9 @@ public class CoverageFragment extends Fragment {
 				e.printStackTrace();
 			}
 	        // load map.html
-	        mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("map.html"), "text/html", "UTF-8", null);
+	        mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("mapCoverage.html"), "text/html", "UTF-8", null);
 		} else if (functionId == 1) {
+
 			// monthly
 			// query for monthly coverage data for this district and for this vaccine
 			String coverageByMonth = q.getMonthlyVaccCover(distId, vaccineId);
@@ -203,9 +204,9 @@ public class CoverageFragment extends Fragment {
 		Query q = state.getQuery();
 		int distId = getDistrict();
 		// query for coverage rates by subdistrict
-		String stockLevel = q.getDistrictCoverage(vaccineId,distId);
+		String coverage = q.getDistrictCoverage(vaccineId,distId);
 		
-		return stockLevel;
+		return coverage;
 	}
 
 	public String loadFile(String name) {
