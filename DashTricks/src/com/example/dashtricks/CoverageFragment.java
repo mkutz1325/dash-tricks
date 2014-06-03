@@ -127,6 +127,7 @@ public class CoverageFragment extends Fragment {
 		
 		// initial load
 		loadDataToWebView();
+		loadDataToWebView();
         return rootView;
     }
     

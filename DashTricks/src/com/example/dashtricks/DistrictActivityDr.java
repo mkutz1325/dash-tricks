@@ -30,6 +30,7 @@ public class DistrictActivityDr extends Activity {
 	private CharSequence mDrawerTitle;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private static String districtId;
+	private static String districtName;
 
 
 	@Override
@@ -41,6 +42,7 @@ public class DistrictActivityDr extends Activity {
 
 		if (extras != null) {
 		    districtId = extras.getString("Id");
+		    districtName = extras.getString("Name");
 		}
 		
         mSectionTitles = getResources().getStringArray(R.array.drawer_array);

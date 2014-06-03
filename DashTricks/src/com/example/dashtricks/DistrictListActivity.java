@@ -42,9 +42,10 @@ public class DistrictListActivity extends FragmentActivity
 	 * the item with the given ID was selected.
 	 */
 	@Override
-	public void onItemSelected(String id) {
+	public void onItemSelected(String id, String name) {
 		Intent detailIntent = new Intent(this, DistrictActivityDr.class);
 		detailIntent.putExtra("Id", id);
+		detailIntent.putExtra("Name", name);
 		startActivity(detailIntent);
 	}
 
