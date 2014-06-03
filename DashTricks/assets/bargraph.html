@@ -109,23 +109,29 @@
 
     chart.selectAll(".bar")
         .data(data)
-      .enter().append("g").each( function(d) {
+      .enter().append("g").each( function(d, index) {
         var xVal = xscale(d.name);
         var yVal = yscale(d.coverage);
         var heightVal = height - yscale(d.coverage);
         var widthVal = xscale.rangeBand();
+        var delay = 300;
         d3.select(this).append("rect")
           .attr("class", function(d) { return d.coverage > 80 ? "bar" : "bar warning"})
           .attr("x", xVal)
-          .attr("y", yVal)
-          .attr("height", heightVal)
+          .attr("y", yVal + heightVal)
+          .attr("height", 0)
           .attr("width", widthVal)
           .on("click", clicked)
+        .transition()
+          .duration(1500)
+          .delay(delay * index)
+          .attr("y", yVal)
+          .attr("height", heightVal)
         d3.select(this).append("text")
           .attr("class", "bartext")
           .attr("x", xVal + widthVal / 2)
           .attr("y", yVal)
-          .attr("dx", "-.5em")
+          .attr("dx", "-.7em")
           .attr("dy", "1em")
           .text(function(d) { return d.coverage.toString() + "%"; });
       });
