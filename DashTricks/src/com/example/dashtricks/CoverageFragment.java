@@ -90,7 +90,7 @@ public class CoverageFragment extends Fragment {
 		    public void onClick(View v) {
 		    	functionId = 1;
 		        loadDataToWebView();
-		        showStockView(false);
+		        showStockView(false, -1, null, -1);
 		    }
 		});
 		
@@ -99,7 +99,7 @@ public class CoverageFragment extends Fragment {
 		    public void onClick(View v) {
 		    	functionId = 0;
 		        loadDataToWebView();
-		        showStockView(false);
+		        showStockView(false, -1, null, -1);
 		    }
 		});
 		
@@ -110,7 +110,7 @@ public class CoverageFragment extends Fragment {
 		    	functionId=-1;
 		        loadDataToWebView();
 		        showDetail(false, -1, null, -1);
-		        showStockView(false);
+		        showStockView(false, -1, null, -1);
 		    }
 		});
 		
@@ -249,6 +249,43 @@ public class CoverageFragment extends Fragment {
 	@JavascriptInterface
 	public void registerMapClick(String data) {
 		Log.v("map click", data);
+		
+		long subId = 0;
+		String subName = null;
+		long coverage = 0;
+		try {
+			JSONObject barData = (JSONObject) parser.parse(data);
+			subId = (Long) barData.get("subDistrictId");
+			subName = (String) barData.get("subDistrictName");
+			coverage = (Long) barData.get("coverage");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Log.v("bar clicked", data);
+		
+		Activity context = this.getActivity();
+		CharSequence text = "Sub-District ID: " + subId + " Name: " + subName;
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+		
+	    // run code on the UI thread:
+	    context.runOnUiThread(new Runnable() {
+	    	private long subId;
+	    	private String subName;
+	    	private long coverage;
+	    	
+	        public void run() {
+	        	CoverageFragment.this.showStockView(true, subId, subName, coverage);
+	        }
+	        
+	        public Runnable init(long subId, String subName, long coverage) {
+	        	this.subId = subId;
+	        	this.subName = subName;
+	        	this.coverage = coverage;
+	        	return this;
+	        }
+	    }.init(subId, subName, coverage) );
 	}
 	
 	@JavascriptInterface
@@ -344,8 +381,12 @@ public class CoverageFragment extends Fragment {
 	 * Shows/Hides View showing further detail about stock wastage for a subDistrict.
 	 * 
 	 * @param show if true, show, otherwise, hide
+	 * @param coverage coverage rate for the subDistrict
+	 * @param subName name of the subDistrict
+	 * @param subId id of the subDistrict
 	 */
-	private void showStockView(boolean show) {
+	@SuppressLint("SetJavaScriptEnabled")
+	private void showStockView(boolean show, long subId, String subName, long coverage) {
 		View rootView = this.getView();
 		WebView stockView = (WebView) rootView.findViewById(R.id.smallWebView);
 		TextView stockDesc = (TextView) rootView.findViewById(R.id.stockDesc);
