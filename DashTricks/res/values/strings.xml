@@ -11,6 +11,7 @@
 	<string name="drawer_close">Close</string>
 	<string name="button_load">Load!</string>
 	<string name="showBySub">Show By Sub-District</string>
+	<string name="summary">Summary</string>
     
 
 </resources>

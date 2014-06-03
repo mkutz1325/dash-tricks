@@ -184,7 +184,7 @@ public class CoverageFragment extends Fragment {
 	        // load the appropriate webpage from the assets folder
 	        //mWebView.loadUrl("file:///android_asset/bargraph2.html");
 	        // do this in a map
-	        mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("map.html"), "text/html", "UTF-8", null);
+	        mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("mapCoverage.html"), "text/html", "UTF-8", null);
 		} else {
 			// monthly
 			String coverageByMonth = q.getMonthlyVaccCover(distId, vaccineId);
