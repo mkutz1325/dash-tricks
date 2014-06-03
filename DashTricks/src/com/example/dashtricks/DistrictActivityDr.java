@@ -121,6 +121,11 @@ public class DistrictActivityDr extends Activity {
 	public String getDistrictId() {
 		return districtId;
 	}
+	
+	// return the district name
+	public String getDistrictName() {
+		return districtName;
+	}
 
 	private class DrawerItemClickListener implements ListView.OnItemClickListener {
 	    @Override

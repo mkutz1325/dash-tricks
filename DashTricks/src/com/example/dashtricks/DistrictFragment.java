@@ -39,7 +39,7 @@ public class DistrictFragment extends Fragment {
 			
 			// set district name
 			TextView districtName = (TextView) rootView.findViewById(R.id.districtName);
-			districtName.setText("District " + distId);
+			districtName.setText(d.getDistrictName());
 			
 			// set population
 			TextView population = (TextView) rootView.findViewById(R.id.population);

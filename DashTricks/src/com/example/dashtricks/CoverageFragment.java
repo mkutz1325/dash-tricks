@@ -219,9 +219,9 @@ public class CoverageFragment extends Fragment {
 		Query q = state.getQuery();
 		int distId = getDistrict();
 		// query for coverage rates by subdistrict
-		String stockLevel = q.getDistrictCoverage(vaccineId,distId);
+		String coverage = q.getDistrictCoverage(vaccineId,distId);
 		
-		return stockLevel;
+		return coverage;
 	}
 
 	public String loadFile(String name) {
