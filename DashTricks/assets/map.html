@@ -23,6 +23,29 @@
       stroke-linejoin: round;
     }
 
+    .bar {
+      height: 20px;
+      float: left;
+      width: 15%;
+    }
+
+    .bar.left {
+      text-align: right;
+    }
+
+    .red {
+      background-color: #cb181d;
+    }
+    .lightRed {
+      background-color: #fb6a4a;
+    }
+    .lightBlue {
+      background-color: #cbc9e2;
+    }
+    .blue {
+      background-color: #6a51a3;
+    }
+
   </style>
 
   <script src="file:///android_asset/d3.js" charset="utf-8"></script>
@@ -30,6 +53,16 @@
   
   </head>
   <body>
+    <div class="bar left">
+      0%
+    </div>
+    <div class="bar red"></div>
+    <div class="bar lightRed"></div>
+    <div class="bar lightBlue"></div>
+    <div class="bar blue"></div>
+    <div class="bar">
+      100%
+    </div>
   </body>
 
   <script>
@@ -41,6 +74,7 @@
 
   var windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
   var windowHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
+  windowHeight = windowHeight - 20;
 
   var width = windowWidth,
     height = windowHeight;
