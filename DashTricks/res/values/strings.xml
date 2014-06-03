@@ -9,8 +9,10 @@
     <string name="action_notifications">Notifications</string>
     <string name="drawer_open">Open</string>
 	<string name="drawer_close">Close</string>
-	<string name="button_load">Load!</string>
+	<string name="button_load">Reload By Vaccine</string>
 	<string name="showBySub">Show By Sub-District</string>
+	<string name="showByMonth">Show By Month</string>
+	<string name="instr">Select a Vaccine on the Chart for More Detail.</string>
     
 
 </resources>

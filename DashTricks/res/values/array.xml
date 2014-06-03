@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="explore_array">
-        <item>Functions</item>
-        <item>By Sub-District</item>
-        <item>Monthly</item>
+        <item>Show by Sub-District</item>
+        <item>Show by Month</item>
     </string-array>
     
     <string-array name="vaccine_array">

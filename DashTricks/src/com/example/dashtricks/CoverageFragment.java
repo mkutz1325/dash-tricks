@@ -41,42 +41,33 @@ public class CoverageFragment extends Fragment {
 	private static String coverageResult;
 	private static WebView mWebView;
 	private static int vaccineId = 0;
-	private static int functionId = 0;
+	private static int functionId = -1;
 	private JSONParser parser;
 	
 	public CoverageFragment() {
 		parser = new JSONParser();
 	}
 	
-	private OnItemSelectedListener mVaccinesListener = new OnItemSelectedListener(0);
-	private OnItemSelectedListener mFunctionsListener = new OnItemSelectedListener(1);
+
+	private OnItemSelectedListener mFunctionsListener = new OnItemSelectedListener();
 			
 	private class OnItemSelectedListener implements AdapterView.OnItemSelectedListener {
 		
-		private int type;
-
-		public OnItemSelectedListener(int type) {
-			this.type = type;
+		public OnItemSelectedListener() {
 		}
 		
 	    @Override
 		public void onItemSelected(AdapterView<?> parent, View view, 
 	            int pos, long id) {
 	        // An item was selected. You can retrieve the selected item using
-	    	showDetail(false, -1, null);
-	    	if (type == 0) {
-	    		vaccineId = pos;
-	    	} else {
-	    		functionId = pos;
-	    	}
+	    	//showDetail(false, -1, null);
+	    	functionId=pos;
+	    	loadDataToWebView();
 	    }
 
 	    @Override
 		public void onNothingSelected(AdapterView<?> parent) {
-	        if (type == 0)
-	        	vaccineId = 0;
-	        else
-	        	functionId = 0;
+	        functionId=-1;
 	    }
 	};
 	
@@ -94,34 +85,29 @@ public class CoverageFragment extends Fragment {
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		mWebView.loadUrl("about:blank");
 		
-		/* Spinner for choosing the vaccine to focus in on */
-		Spinner vaccineDropDown = (Spinner) rootView.findViewById(R.id.spinner1);
-		// Create an ArrayAdapter using the string array and a default spinner layout
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this.getActivity(),
-		        R.array.vaccine_array, R.layout.spinner_item);
-		// Specify the layout to use when the list of choices appears
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
-		vaccineDropDown.setAdapter(adapter);
-		vaccineDropDown.setOnItemSelectedListener(mVaccinesListener);
+		Button showByMonth = (Button) rootView.findViewById(R.id.byMonth);
+		showByMonth.setOnClickListener(new View.OnClickListener() {
+		    public void onClick(View v) {
+		    	functionId = 1;
+		        loadDataToWebView();
+		    }
+		});
 		
-		/* Spinner for choosing byLocation or byMonth */
-		Spinner functions = (Spinner) rootView.findViewById(R.id.spinner2);
-		// Create an ArrayAdapter with the different function options
-		ArrayAdapter<CharSequence> funcAdapter = ArrayAdapter.createFromResource(this.getActivity(),
-		        R.array.explore_array, R.layout.spinner_item);
-		// Specify the layout to use when the list of choices appears
-		funcAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
-		functions.setAdapter(funcAdapter);
-		functions.setOnItemSelectedListener(mFunctionsListener);
+		Button showBySub = (Button) rootView.findViewById(R.id.bySub);
+		showBySub.setOnClickListener(new View.OnClickListener() {
+		    public void onClick(View v) {
+		    	functionId = 0;
+		        loadDataToWebView();
+		    }
+		});
 		
 		/* Button for reloading the web view */
 		Button button = (Button) rootView.findViewById(R.id.button_load);
 		button.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
+		    	functionId=-1;
 		        loadDataToWebView();
-		    	//registerClick(null);
+		        showDetail(false, -1, null);
 		    }
 		});
 		
@@ -142,9 +128,37 @@ public class CoverageFragment extends Fragment {
 		String districtId = d.getDistrictId();
 		Integer distId = Integer.parseInt(districtId);
 		
-		
-		
-		if (functionId == 0 || vaccineId==0) {
+		if (functionId == 0){
+		    // by sub-district
+
+			// load the map of this district into coverageResult; then map.html will call other methods for datas
+			try {			
+				Activity a = this.getActivity();
+				AssetManager assetManager = a.getAssets();
+				InputStream input = assetManager.open("tza.json");
+				BufferedReader br = new BufferedReader(new InputStreamReader(input));
+				coverageResult = br.readLine();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        // load map.html
+	        mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("map.html"), "text/html", "UTF-8", null);
+		} else if (functionId == 1) {
+			// monthly
+			// query for monthly coverage data for this district and for this vaccine
+			String coverageByMonth = q.getMonthlyVaccCover(distId, vaccineId);
+			// parse the result into a JSON string
+			try {
+				JSONObject districtObj = (JSONObject) parser.parse(coverageByMonth);
+				JSONArray districts = (JSONArray) districtObj.get("districtCoverage");
+				
+				coverageResult = districts.toJSONString();
+			} catch (ParseException e) {
+				Log.i("CoverageData", e.getMessage());
+			}
+	        // load the appropriate webpage from the assets folder
+			mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("linegraph.html"), "text/html", "UTF-8", null);
+		} else {
 			// by vaccine
 			
 			// query for immunization coverage for a district
@@ -163,36 +177,6 @@ public class CoverageFragment extends Fragment {
 	        // load the appropriate webpage from the assets folder
 			mWebView.loadUrl("about:blank");
 			mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("bargraph.html"), "text/html", "UTF-8", null);
-		} else if (functionId == 1){
-		    // by sub-district
-
-			// load the map of this district into coverageResult; then map.html will call other methods for datas
-			try {			
-				Activity a = this.getActivity();
-				AssetManager assetManager = a.getAssets();
-				InputStream input = assetManager.open("tza.json");
-				BufferedReader br = new BufferedReader(new InputStreamReader(input));
-				coverageResult = br.readLine();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	        // load map.html
-	        mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("map.html"), "text/html", "UTF-8", null);
-		} else {
-			// monthly
-			// query for monthly coverage data for this district and for this vaccine
-			String coverageByMonth = q.getMonthlyVaccCover(distId, vaccineId);
-			// parse the result into a JSON string
-			try {
-				JSONObject districtObj = (JSONObject) parser.parse(coverageByMonth);
-				JSONArray districts = (JSONArray) districtObj.get("districtCoverage");
-				
-				coverageResult = districts.toJSONString();
-			} catch (ParseException e) {
-				Log.i("CoverageData", e.getMessage());
-			}
-	        // load the appropriate webpage from the assets folder
-			mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("linegraph.html"), "text/html", "UTF-8", null);
 		}
     }
     
@@ -293,8 +277,6 @@ public class CoverageFragment extends Fragment {
 	        	return this;
 	        }
 	    }.init(vId, vName) );
-
-		//showDetail(true);
 	}
 	
 	// get the stock level data
@@ -307,32 +289,39 @@ public class CoverageFragment extends Fragment {
 	private void showDetail(boolean show, long vaccId, String vaccName) {
 		if (show) {
 			
+			vaccineId = (int) vaccId;
 			View rootView = this.getView();
+			
+			TextView instructions = (TextView) rootView.findViewById(R.id.instructions);
+			instructions.setVisibility(View.GONE);
+			
 			TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
 			vaccineDetail.setText(vaccName);
-			vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+			vaccineDetail.setVisibility(View.VISIBLE);
+			
 			Button showBySub = (Button) rootView.findViewById(R.id.bySub);
-			showBySub.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-			vaccineId = (int) vaccId;
-			showBySub.setOnClickListener(new View.OnClickListener() {
-			    public void onClick(View v) {
-			    	functionId = 1;
-			        loadDataToWebView();
-			    }
-			});
+			showBySub.setVisibility(View.VISIBLE);
+			
+			Button showByMonth = (Button) rootView.findViewById(R.id.byMonth);
+			showByMonth.setVisibility(View.VISIBLE);
+
+			
 /*			WebView stockView = (WebView) rootView.findViewById(R.id.smallWebView);
 			stockView.addJavascriptInterface(this, "android");
 			// enable javascript
 			stockView.getSettings().setJavaScriptEnabled(true);
 			stockView.loadUrl("file:///android_asset/circlegraph.html");*/
-			//loadDataToWebView();
-			//stockView.loadUrl("http://www.google.com");
 		} else {
 			View rootView = this.getView();
+			TextView instructions = (TextView) rootView.findViewById(R.id.instructions);
 			TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
-			vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
 			Button showBySub = (Button) rootView.findViewById(R.id.bySub);
-			showBySub.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0));
+			Button showByMonth = (Button) rootView.findViewById(R.id.byMonth);
+			
+			instructions.setVisibility(View.VISIBLE);
+			vaccineDetail.setVisibility(View.GONE);
+			showBySub.setVisibility(View.GONE);
+			showByMonth.setVisibility(View.GONE);
 		}
 	}
 }
