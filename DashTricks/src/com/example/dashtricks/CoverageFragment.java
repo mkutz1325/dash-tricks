@@ -348,7 +348,7 @@ public class CoverageFragment extends Fragment {
 			instructions.setVisibility(View.GONE);
 			
 			TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
-			vaccineDetail.setText(vaccName + ": " + coverage);
+			vaccineDetail.setText(vaccName + ": " + coverage + "%");
 			vaccineDetail.setVisibility(View.VISIBLE);
 			
 			Button showBySub = (Button) rootView.findViewById(R.id.bySub);
