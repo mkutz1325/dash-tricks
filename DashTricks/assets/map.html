@@ -25,8 +25,8 @@
 
   </style>
 
-  <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-  <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="file:///android_asset/d3.js" charset="utf-8"></script>
+  <script src="file:///android_asset/topojson.js" charset="utf-8"></script>
   
   </head>
   <body>
@@ -86,20 +86,21 @@
 
   console.log("District id: " + distID);
 
-  var coverageByName = {};
+  var coverageByID = {};
   var maxCoverage = -1;
   var minCoverage = 100000;
   console.log("Length: " + coverage.length);
   for (var index = 0; index < coverage.length; index++) {
-    coverageByName[coverage[index].subDistrict_name] = +coverage[index].min_coverage;
-    console.log(+coverage[index].min_coverage);
-    maxCoverage = Math.max(maxCoverage, +coverage[index].min_coverage);
-    minCoverage = Math.min(minCoverage, +coverage[index].min_coverage);
+    var id = coverage[index].subDistrict_id;
+    coverageByID[id] = +coverage[index].min_coverage;
+    console.log(coverageByID[id]);
+    maxCoverage = Math.max(maxCoverage, coverageByID[id]);
+    minCoverage = Math.min(minCoverage, coverageByID[id]);
   }
 
-  var color = d3.scale.linear()
-                .domain([minCoverage, maxCoverage])
-                .range(["#ff0000", "#eeeeee"]);
+  var color = d3.scale.threshold()
+      .domain([25,50,75])
+      .range(["#cb181d", "#fb6a4a", "#cbc9e2","#6a51a3"]);
 
   console.log(tza);
 
@@ -147,8 +148,7 @@
     .attr("d", path)
     .attr("class", "feature")
     .attr("fill", function(d) { 
-      console.log("Color: " + color(coverageByName[d.properties.NAME_3]));
-      return color(coverageByName[d.properties.NAME_3]); 
+      return color(coverageByID[d.properties.ID_3]);
     })
     .attr("id", function(d) { return "id" + d.properties.ID_3.toString() })
     .on("click", clicked);

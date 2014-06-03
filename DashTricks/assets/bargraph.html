@@ -4,6 +4,7 @@
   <style>
     body {
       margin: 0px;
+      overflow: hidden;
       /*border: 5px solid red;*/
     }
 
@@ -54,6 +55,9 @@
   </body>
 
   <script>
+
+    // disable scrolling
+    document.ontouchmove = function(e){ e.preventDefault(); }
 
     var windowWidth = (window.innerWidth > 0) ? window.innerWidth : screen.width;
     var windowHeight = (window.innerHeight > 0) ? window.innerHeight : screen.height;
