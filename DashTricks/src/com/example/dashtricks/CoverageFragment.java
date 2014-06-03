@@ -15,20 +15,24 @@ import org.json.simple.parser.ParseException;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout.LayoutParams;
+import android.view.ViewPropertyAnimator;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.dashtricks.data.Query;
  
@@ -59,7 +63,7 @@ public class CoverageFragment extends Fragment {
 		public void onItemSelected(AdapterView<?> parent, View view, 
 	            int pos, long id) {
 	        // An item was selected. You can retrieve the selected item using
-	    	showDetail(false);
+	    	showDetail(false, -1, null);
 	    	if (type == 0) {
 	    		vaccineId = pos;
 	    	} else {
@@ -117,12 +121,12 @@ public class CoverageFragment extends Fragment {
 		button.setOnClickListener(new View.OnClickListener() {
 		    public void onClick(View v) {
 		        loadDataToWebView();
-		    	registerClick(null);
+		    	//registerClick(null);
 		    }
 		});
 		
 		// initial load
-		//loadDataToWebView();
+		loadDataToWebView();
         return rootView;
     }
     
@@ -141,9 +145,11 @@ public class CoverageFragment extends Fragment {
 		
 		if (functionId == 0 || vaccineId==0) {
 			// by vaccine
-			String coverageByVaccine = q.getImmunization(distId);
 			
-			//JSONParser parser = new JSONParser();
+			// query for immunization coverage for a district
+			String coverageByVaccine = q.getImmunization(distId);
+
+			// parse the result into a JSON string and set coverageResults
 			try {
 				JSONObject districtObj = (JSONObject) parser.parse(coverageByVaccine);
 				JSONArray districts = (JSONArray) districtObj.get("immunization");
@@ -158,44 +164,30 @@ public class CoverageFragment extends Fragment {
 			mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("bargraph.html"), "text/html", "UTF-8", null);
 		} else if (functionId == 1){
 		    // by sub-district
-			// TODO replace 1 with result of first spinner
-			//String coverageBySubDistrict = q.getDistrictCoverage(vaccineId, distId);
-			
-			//JSONParser parser = new JSONParser();
-			try {
-/*				JSONObject districtObj = (JSONObject) parser.parse(coverageBySubDistrict);
-				JSONArray districts = (JSONArray) districtObj.get("district_coverage");
-				
-				coverageResult = districts.toJSONString();*/
-				
+
+			// load the map of this district into coverageResult; then map.html will call other methods for datas
+			try {			
 				Activity a = this.getActivity();
 				AssetManager assetManager = a.getAssets();
-				//String[] files = assetManager.list("");
 				InputStream input = assetManager.open("tza.json");
 				BufferedReader br = new BufferedReader(new InputStreamReader(input));
 				coverageResult = br.readLine();
-			} /*catch (ParseException e) {
-				// TODO Auto-generated catch block
-				Log.i("CoverageData", e.getMessage());
-			}*/ catch (IOException e) {
-				// TODO Auto-generated catch block
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	        // load the appropriate webpage from the assets folder
-	        //mWebView.loadUrl("file:///android_asset/bargraph2.html");
-	        // do this in a map
+	        // load map.html
 	        mWebView.loadDataWithBaseURL("file:///android_asset/", loadFile("map.html"), "text/html", "UTF-8", null);
 		} else {
 			// monthly
+			// query for monthly coverage data for this district and for this vaccine
 			String coverageByMonth = q.getMonthlyVaccCover(distId, vaccineId);
-			//JSONParser parser = new JSONParser();
+			// parse the result into a JSON string
 			try {
 				JSONObject districtObj = (JSONObject) parser.parse(coverageByMonth);
 				JSONArray districts = (JSONArray) districtObj.get("districtCoverage");
 				
 				coverageResult = districts.toJSONString();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				Log.i("CoverageData", e.getMessage());
 			}
 	        // load the appropriate webpage from the assets folder
@@ -209,6 +201,7 @@ public class CoverageFragment extends Fragment {
 		return coverageResult;
 	}
 	
+	// for the by-subdistrict map function
 	@JavascriptInterface
 	public int getDistrict() {
 		DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
@@ -218,11 +211,13 @@ public class CoverageFragment extends Fragment {
 		return distId;
 	}
 	
+	// for the by-subdistrict map function
 	@JavascriptInterface
 	public String getCoverage() {
 		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
 		Query q = state.getQuery();
 		int distId = getDistrict();
+		// query for coverage rates by subdistrict
 		String stockLevel = q.getDistrictCoverage(vaccineId,distId);
 		
 		return stockLevel;
@@ -265,25 +260,40 @@ public class CoverageFragment extends Fragment {
 	@JavascriptInterface
 	public void registerClick(String data) {
 		//Log.d(TAG, "getData() called");
-	    // String data = Data.getImmunization(districtId, monthId)
-/*		try {
+		long vId = 0;
+		String vName = null;
+		try {
 			JSONObject barData = (JSONObject) parser.parse(data);
-			int vId = Integer.parseInt((String) barData.get("id"));
-			vaccineId = vId;
+			vId = (Long) barData.get("id");
+			vName = (String) barData.get("name");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		functionId = 1;
-		loadDataToWebView();*/
-//		View rootView = this.getView();
-//		TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
-//		vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-//		vaccineDetail.setText("Vaccine Name");
-/*		Button newButton = new Button(this.getActivity());
-		newButton.setText("Show by Subdistrict");*/
-		//Log.v("bar clicked", data);
-		showDetail(true);
+		Log.v("bar clicked", data);
+		
+		Activity context = this.getActivity();
+		CharSequence text = "Vaccine ID: " + vId + " Name: " + vName;
+		int duration = Toast.LENGTH_SHORT;
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+		
+	    // run code on the UI thread:
+	    context.runOnUiThread(new Runnable() {
+	    	private long vId;
+	    	private String vName;
+	    	
+	        public void run() {
+	        	CoverageFragment.this.showDetail(true, vId, vName);
+	        }
+	        
+	        public Runnable init(long vId, String vName) {
+	        	this.vId = vId;
+	        	this.vName = vName;
+	        	return this;
+	        }
+	    }.init(vId, vName) );
+
+		//showDetail(true);
 	}
 	
 	// get the stock level data
@@ -292,31 +302,30 @@ public class CoverageFragment extends Fragment {
 		return "{\"name\":\"BCG\",\"value\":\"46\"}";
 	}
 	
-	private void showDetail(boolean show) {
+	@SuppressLint("SetJavaScriptEnabled")
+	private void showDetail(boolean show, long vaccId, String vaccName) {
 		if (show) {
-			int vaccId = 1;
-			String vaccName = "BCG";
+			
 			View rootView = this.getView();
 			TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
-			vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			vaccineDetail.setText(vaccName);
+			vaccineDetail.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 			Button showBySub = (Button) rootView.findViewById(R.id.bySub);
 			showBySub.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-			vaccineId = vaccId;
+			vaccineId = (int) vaccId;
 			showBySub.setOnClickListener(new View.OnClickListener() {
 			    public void onClick(View v) {
 			    	functionId = 1;
 			        loadDataToWebView();
 			    }
 			});
-			WebView stockView = (WebView) rootView.findViewById(R.id.smallWebView);
+/*			WebView stockView = (WebView) rootView.findViewById(R.id.smallWebView);
 			stockView.addJavascriptInterface(this, "android");
 			// enable javascript
 			stockView.getSettings().setJavaScriptEnabled(true);
-			stockView.loadUrl("file:///android_asset/circlegraph.html");
+			stockView.loadUrl("file:///android_asset/circlegraph.html");*/
 			//loadDataToWebView();
 			//stockView.loadUrl("http://www.google.com");
-			
 		} else {
 			View rootView = this.getView();
 			TextView vaccineDetail = (TextView) rootView.findViewById(R.id.vaccineName);
