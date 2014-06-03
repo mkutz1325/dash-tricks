@@ -244,6 +244,11 @@ public class CoverageFragment extends Fragment {
 	}
 	
 	@JavascriptInterface
+	public void registerMapClick(String data) {
+		Log.v("map click", data);
+	}
+	
+	@JavascriptInterface
 	public void registerClick(String data) {
 		//Log.d(TAG, "getData() called");
 		long vId = 0;
