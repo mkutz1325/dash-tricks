@@ -387,7 +387,7 @@ public class CoverageFragment extends Fragment {
 		if (show) {
 			stockView.setVisibility(View.VISIBLE);
 			stockDesc.setVisibility(View.VISIBLE);
-			stockDesc.setText("SubDistrict Stock Wastage");
+			stockDesc.setText("Stock Wastage: 18%\nStock Outs: 2\nStock Level: 39%");
 			stockView.addJavascriptInterface(this, "android");
 			// enable javascript
 			stockView.getSettings().setJavaScriptEnabled(true);
