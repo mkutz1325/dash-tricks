@@ -75,6 +75,13 @@
 		    android:text="@string/button_load"
 		    android:textColor="#FFFFFF"
 		    android:background="#881111FF" />
+		
+		<WebView
+	        android:id="@+id/smallWebView"
+	        android:layout_width="0dp"
+	        android:layout_height="150dp"
+	        android:visibility="gone"
+	        android:background="#88B4D8E7" />
     
     </LinearLayout>
 

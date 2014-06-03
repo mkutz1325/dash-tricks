@@ -306,12 +306,6 @@ public class CoverageFragment extends Fragment {
 			Button showByMonth = (Button) rootView.findViewById(R.id.byMonth);
 			showByMonth.setVisibility(View.VISIBLE);
 
-			
-/*			WebView stockView = (WebView) rootView.findViewById(R.id.smallWebView);
-			stockView.addJavascriptInterface(this, "android");
-			// enable javascript
-			stockView.getSettings().setJavaScriptEnabled(true);
-			stockView.loadUrl("file:///android_asset/circlegraph.html");*/
 		} else {
 			View rootView = this.getView();
 			TextView instructions = (TextView) rootView.findViewById(R.id.instructions);
@@ -323,6 +317,20 @@ public class CoverageFragment extends Fragment {
 			vaccineDetail.setVisibility(View.GONE);
 			showBySub.setVisibility(View.GONE);
 			showByMonth.setVisibility(View.GONE);
+		}
+	}
+	
+	private void showStockView(boolean show) {
+		View rootView = this.getView();
+		WebView stockView = (WebView) rootView.findViewById(R.id.smallWebView);
+		if (show) {
+			stockView.setVisibility(View.VISIBLE);
+			stockView.addJavascriptInterface(this, "android");
+			// enable javascript
+			stockView.getSettings().setJavaScriptEnabled(true);
+			stockView.loadUrl("file:///android_asset/circlegraph.html");
+		} else {
+			stockView.setVisibility(View.VISIBLE);
 		}
 	}
 }
