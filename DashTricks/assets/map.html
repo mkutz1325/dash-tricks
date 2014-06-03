@@ -99,8 +99,8 @@
   }
 
   var color = d3.scale.threshold()
-      .domain([65])
-      .range(["red", "blue"]);
+      .domain([25,50,75])
+      .range(["#cb181d", "#fb6a4a", "#cbc9e2","#6a51a3"]);
 
   console.log(tza);
 
@@ -148,7 +148,6 @@
     .attr("d", path)
     .attr("class", "feature")
     .attr("fill", function(d) { 
-      console.log("Color: " + color(coverageByID[d.properties.ID_3]));
       return color(coverageByID[d.properties.ID_3]);
     })
     .attr("id", function(d) { return "id" + d.properties.ID_3.toString() })
