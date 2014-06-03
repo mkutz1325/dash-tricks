@@ -114,7 +114,7 @@
         var yVal = yscale(d.coverage);
         var heightVal = height - yscale(d.coverage);
         var widthVal = xscale.rangeBand();
-        var delay = 300;
+        var delay = 200;
         d3.select(this).append("rect")
           .attr("class", function(d) { return d.coverage > 80 ? "bar" : "bar warning"})
           .attr("x", xVal)
@@ -123,7 +123,7 @@
           .attr("width", widthVal)
           .on("click", clicked)
         .transition()
-          .duration(1500)
+          .duration(1000)
           .delay(delay * index)
           .attr("y", yVal)
           .attr("height", heightVal)

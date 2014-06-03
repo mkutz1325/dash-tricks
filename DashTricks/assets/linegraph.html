@@ -111,7 +111,7 @@
     data = data.map(function (d) { return {month: dateToMonthName(d.month), coverage: d.coverage}; });
 
     xscale.domain(data.map(function(d) { return d.month; }));
-    yscale.domain([-3, Math.max(d3.max(data, function(d) { return d.coverage; }),10)]);
+    yscale.domain([0, Math.max(d3.max(data, function(d) { return d.coverage; }),120)]);
 
     console.log("domain: " + xscale.domain());
 
@@ -128,41 +128,35 @@
                   .x(function (d) { return xscale(d.month) + xscale.rangeBand() / 2})
                   .y(function (d) { return yscale(d.coverage)});
 
-    chart.append("path")
+    var path = chart.append("path")
       .datum(data)
       .attr("class", "line")
       .attr("d", line);
 
-    chart.selectAll(".pointmax")
+    var totalLength = path.node().getTotalLength();
+
+    path
+      .attr("stroke-dasharray", totalLength + " " + totalLength)
+      .attr("stroke-dashoffset", totalLength)
+      .transition()
+        .duration(2000)
+        .ease("linear")
+        .attr("stroke-dashoffset", 0);
+
+    chart.selectAll(".point")
         .data(data)
-      .enter().append("g").each( function(d) {
+      .enter().append("g").each( function(d, index) {
         var xVal = xscale(d.month) + xscale.rangeBand() / 2;
         var yVal = yscale(d.coverage);
         var widthVal = xscale.rangeBand();
+        var delay = 250;
         d3.select(this).append("circle")
-          .attr("class", function(d) { return d.coverage < 8 ? "point" : "point warning"})
+          .attr("class", function(d) { return d.coverage > 80 ? "point" : "point warning"})
           .attr("cx", xVal)
           .attr("cy", yVal)
-          .attr("r", "5px");
-      });
-
-    data = d3.csv.parse(d3.select("#csvdatamin").html(), type);
-
-    chart.append("path")
-      .datum(data)
-      .attr("class", "line")
-      .attr("d", line);
-
-    chart.selectAll(".pointmin")
-        .data(data)
-      .enter().append("g").each( function(d) {
-        var xVal = xscale(d.month) + xscale.rangeBand() / 2;
-        var yVal = yscale(d.coverage);
-        var widthVal = xscale.rangeBand();
-        d3.select(this).append("circle")
-          .attr("class", function(d) { return d.coverage > 1 ? "point" : "point warning"})
-          .attr("cx", xVal)
-          .attr("cy", yVal)
+          .attr("r", "0px")
+        .transition()
+          .delay(delay * index)
           .attr("r", "5px");
       });
 
