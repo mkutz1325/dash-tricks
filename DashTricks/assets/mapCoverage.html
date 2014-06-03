@@ -215,7 +215,13 @@
   }
 
   function clicked(d) {
-    android.registerClick(d.properties.ID_3);
+    toReturn = {
+                subDistrictId = d.properties.ID_3, 
+                subDistrictName = d.properties.NAME_3,
+                coverage = coverageByID[d.properties.ID_3]
+              };
+
+    android.registerMapClick(JSON.stringify(toReturn));
   }
 
   </script>
