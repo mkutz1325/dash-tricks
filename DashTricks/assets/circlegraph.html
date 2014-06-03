@@ -65,8 +65,9 @@ BCG,37
         radiusCalc = Math.min(height, width), 
         outerR = radiusCalc/2.3,
         innerR = outerR / 1.5,
-        heightOffset = -radiusCalc/10,
+        heightOffset = -radiusCalc/30,
         nameOffset = radiusCalc/1.5 + heightOffset;
+        titleOffset = radiusCalc/1.5 + heightOffset * 35;
 
     var data = d3.csv.parse(d3.select("#csvdata").html(), type);
     // var data = android.getStockData();
@@ -146,6 +147,14 @@ BCG,37
         .attr("dy", nameOffset)
         .attr("font-size", radiusCalc * .15 + "px")
         .text(function(d) { return d.name;});
+
+    var title_label = chart.append("svg:text")
+        .attr("class", "label_name")
+        .attr("text-anchor", "middle") // text-align: right
+        .attr("transform", "translate(" + (width/2) + "," + (height/2 + heightOffset) + ")")
+        .attr("dy", titleOffset)
+        .attr("font-size", radiusCalc * .2 + "px")
+        .text(function(d) { return "Wastage";});
 
 
 

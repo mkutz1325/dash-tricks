@@ -67,9 +67,12 @@
 
 		<Button
 		    android:id="@+id/button_load"
-		    android:layout_width="wrap_content"
+		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
 		    android:text="@string/button_load"
-		    android:background="#881111FF" /></LinearLayout>
+		    android:textColor="#FFFFFF"
+		    android:background="#881111FF" />
+    
+    </LinearLayout>
 
 </LinearLayout>
