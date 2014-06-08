@@ -259,7 +259,7 @@ public class CoverageFragment extends Fragment {
 		Log.v("bar clicked", data);
 		
 		Activity context = this.getActivity();
-		CharSequence text = "Sub-District ID: " + subId + " Name: " + subName;
+		CharSequence text = "Sub-District Name: " + subName + " Coverage: " + coverage;
 		int duration = Toast.LENGTH_SHORT;
 		Toast toast = Toast.makeText(context, text, duration);
 		toast.show();
