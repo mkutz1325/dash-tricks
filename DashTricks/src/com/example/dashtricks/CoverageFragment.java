@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Random;
 import java.util.Scanner;
 
 import org.json.simple.JSONArray;
@@ -387,7 +388,13 @@ public class CoverageFragment extends Fragment {
 		if (show) {
 			stockView.setVisibility(View.VISIBLE);
 			stockDesc.setVisibility(View.VISIBLE);
-			stockDesc.setText("Stock Wastage: 18%\nStock Outs: 2\nStock Level: 39%");
+			long wastage = (long) Math.ceil(60 - 0.58*coverage);
+			Random r = new Random();
+			double weight = 2 - (1.75/100)*coverage;
+			long outs = (long) Math.floor(weight * (r.nextInt(1)+ 1));
+			long level = (long) Math.ceil(20 + 0.75*coverage);
+			stockDesc.setText("Stock Wastage: " + wastage + "%\nStock Outs: " + 
+					outs + "\nStock Level: " + level + "%");
 			stockView.addJavascriptInterface(this, "android");
 			// enable javascript
 			stockView.getSettings().setJavaScriptEnabled(true);
