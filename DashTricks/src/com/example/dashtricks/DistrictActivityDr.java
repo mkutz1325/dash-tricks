@@ -85,10 +85,10 @@ public class DistrictActivityDr extends Activity {
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        // Open the drawer initially to show it is there
-        mDrawerLayout.openDrawer(mDrawerList);
         // start with district fragment as default
         selectItem(0);
+        // Open the drawer initially to show it is there
+        mDrawerLayout.openDrawer(mDrawerList);
 	}
 	
 
