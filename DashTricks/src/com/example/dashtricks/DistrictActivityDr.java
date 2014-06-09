@@ -85,7 +85,9 @@ public class DistrictActivityDr extends Activity {
 
         // Set the drawer toggle as the DrawerListener
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        // start with coverage fragment as default
+        // Open the drawer initially to show it is there
+        mDrawerLayout.openDrawer(mDrawerList);
+        // start with district fragment as default
         selectItem(0);
 	}
 	
@@ -158,9 +160,6 @@ public class DistrictActivityDr extends Activity {
 				fragment = new StockFragment();
 				break;
 		}
-/*	    Bundle args = new Bundle();
-	    args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
-	    fragment.setArguments(args);*/
 
 	    // Insert the fragment by replacing any existing fragment
 	    FragmentManager fragmentManager = getFragmentManager();
