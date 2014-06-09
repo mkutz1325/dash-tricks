@@ -151,14 +151,16 @@ public class DistrictActivityDr extends Activity {
 				fragment = new DistrictFragment();
 				break;
 			case 1:
+			case 2:
+			case 3:
 				fragment = new CoverageFragment();
 				break;
-			case 2:
+/*			case 2:
 				fragment = new ColdChainFragment();
 				break;
 			case 3:
 				fragment = new StockFragment();
-				break;
+				break;*/
 		}
 
 	    // Insert the fragment by replacing any existing fragment
