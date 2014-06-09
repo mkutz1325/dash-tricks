@@ -3,6 +3,7 @@ package com.example.dashtricks;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -44,6 +45,11 @@ public class DistrictActivityDr extends Activity {
 		    districtId = extras.getString("Id");
 		    districtName = extras.getString("Name");
 		}
+		
+		Intent mServiceIntent = new Intent(this, QueryService.class);
+		mServiceIntent.putExtra("Id", districtId);
+		mServiceIntent.putExtra("Name", districtName);
+		this.startService(mServiceIntent);
 		
         mSectionTitles = getResources().getStringArray(R.array.drawer_array);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -43,23 +43,30 @@ public class DistrictFragment extends Fragment {
 			
 			// set population
 			TextView population = (TextView) rootView.findViewById(R.id.population);
-			population.setText("Population: " + "12345");
+			long basePop = 80000;
+			double popMul = 1.0 + (((distId%10)*.25 + ((distId/10)%10)*.25)/2.0);
+			long pop = (long) Math.ceil((basePop*popMul));
+			population.setText("Population: " + pop);
 			
 			// set monthly births
 			TextView monthlyBirths = (TextView) rootView.findViewById(R.id.monthly_births);
-			monthlyBirths.setText("Monthly Births: " + "54321");
+			long births = (long) Math.ceil(.12*pop);
+			monthlyBirths.setText("Monthly Births: " + births);
 			
 			// set surviving infants per month
 			TextView survivingInfantsMonth = (TextView) rootView.findViewById(R.id.surviving_infants_month);
-			survivingInfantsMonth.setText("Surviving Infants/Month: " + "98765");		
+			long survive = (long) Math.ceil(.90*births - popMul*3);
+			survivingInfantsMonth.setText("Surviving Infants/Month: " + survive);		
 			
 			// set number of sub districts
 			TextView numSubDistricts = (TextView) rootView.findViewById(R.id.num_sub_districts);
-			numSubDistricts.setText("No. Sub-districts: " + "20");
+			long subDistricts = (long) Math.ceil(12 * popMul);
+			numSubDistricts.setText("No. Sub-districts: " + subDistricts);
 			
 			// set number of health facilities
 			TextView numHealthFacilities = (TextView) rootView.findViewById(R.id.num_health_facilities);
-			numHealthFacilities.setText("No. health facilities: " + "60");
+			long facilities = (long) Math.ceil(popMul * 2 * subDistricts);
+			numHealthFacilities.setText("No. health facilities: " + facilities);
 			
 			/** Load the map **/
 			

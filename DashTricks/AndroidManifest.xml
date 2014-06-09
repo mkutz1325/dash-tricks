@@ -35,6 +35,10 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.dashtricks.DistrictListActivity" />
         </activity>
+        
+        <service
+            android:name=".QueryService"
+            android:exported="false"/>
     </application>
 
 </manifest>

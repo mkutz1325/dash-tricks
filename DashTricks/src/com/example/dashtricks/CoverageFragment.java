@@ -24,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,29 +41,6 @@ public class CoverageFragment extends Fragment {
 	public CoverageFragment() {
 		parser = new JSONParser();
 	}
-	
-
-	private OnItemSelectedListener mFunctionsListener = new OnItemSelectedListener();
-			
-	private class OnItemSelectedListener implements AdapterView.OnItemSelectedListener {
-		
-		public OnItemSelectedListener() {
-		}
-		
-	    @Override
-		public void onItemSelected(AdapterView<?> parent, View view, 
-	            int pos, long id) {
-	        // An item was selected. You can retrieve the selected item using
-	    	//showDetail(false, -1, null);
-	    	functionId=pos;
-	    	loadDataToWebView();
-	    }
-
-	    @Override
-		public void onNothingSelected(AdapterView<?> parent) {
-	        functionId=-1;
-	    }
-	};
 	
     @SuppressLint("SetJavaScriptEnabled")
 	@Override
@@ -109,8 +85,9 @@ public class CoverageFragment extends Fragment {
 		    }
 		});
 		
+		// initial load should always be vaccine view
+		functionId=-1;
 		// initial load
-		loadDataToWebView();
 		loadDataToWebView();
         return rootView;
     }
@@ -170,7 +147,6 @@ public class CoverageFragment extends Fragment {
 				
 				coverageResult = districts.toJSONString();
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				Log.i("CoverageData", e.getMessage());
 			}
 	        // load the appropriate webpage from the assets folder
@@ -230,12 +206,10 @@ public class CoverageFragment extends Fragment {
 		    }
 			
 		} catch (FileNotFoundException e) {
-			String message = e.getMessage();
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
-			String message = e.getMessage();
 			e.printStackTrace();
 		}
 		return string;
@@ -322,12 +296,6 @@ public class CoverageFragment extends Fragment {
 	        	return this;
 	        }
 	    }.init(vId, vName, coverage) );
-	}
-	
-	// get the stock level data
-	@JavascriptInterface
-	public String getStockData() {
-		return "{\"name\":\"BCG\",\"value\":\"46\"}";
 	}
 	
 	/***
