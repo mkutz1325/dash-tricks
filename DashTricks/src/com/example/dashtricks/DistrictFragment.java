@@ -50,7 +50,7 @@ public class DistrictFragment extends Fragment {
 			
 			// set monthly births
 			TextView monthlyBirths = (TextView) rootView.findViewById(R.id.monthly_births);
-			long births = (long) Math.ceil(.12*pop);
+			long births = (long) (Math.ceil(.12*pop)/12);
 			monthlyBirths.setText("Monthly Births: " + births);
 			
 			// set surviving infants per month
