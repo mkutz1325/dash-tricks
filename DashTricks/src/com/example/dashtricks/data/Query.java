@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Logger;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;

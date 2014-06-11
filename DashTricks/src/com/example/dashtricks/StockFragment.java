@@ -88,7 +88,7 @@ public class StockFragment extends Fragment {
 	
 	@JavascriptInterface
 	public int getDistrict() {
-		DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
+		DistrictActivity d = (DistrictActivity) this.getActivity();
 		String districtId = d.getDistrictId();
 		Integer distId = Integer.parseInt(districtId);
 		

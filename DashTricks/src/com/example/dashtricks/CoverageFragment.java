@@ -58,7 +58,8 @@ public class CoverageFragment extends Fragment {
 		
 		Button showByMonth = (Button) rootView.findViewById(R.id.byMonth);
 		showByMonth.setOnClickListener(new View.OnClickListener() {
-		    public void onClick(View v) {
+		    @Override
+			public void onClick(View v) {
 		    	functionId = 1;
 		        loadDataToWebView();
 		        showStockView(false, -1, null, -1);
@@ -67,7 +68,8 @@ public class CoverageFragment extends Fragment {
 		
 		Button showBySub = (Button) rootView.findViewById(R.id.bySub);
 		showBySub.setOnClickListener(new View.OnClickListener() {
-		    public void onClick(View v) {
+		    @Override
+			public void onClick(View v) {
 		    	functionId = 0;
 		        loadDataToWebView();
 		        showStockView(false, -1, null, -1);
@@ -77,7 +79,8 @@ public class CoverageFragment extends Fragment {
 		/* Button for reloading the web view */
 		Button button = (Button) rootView.findViewById(R.id.button_load);
 		button.setOnClickListener(new View.OnClickListener() {
-		    public void onClick(View v) {
+		    @Override
+			public void onClick(View v) {
 		    	functionId=-1;
 		        loadDataToWebView();
 		        showDetail(false, -1, null, -1);
@@ -99,7 +102,7 @@ public class CoverageFragment extends Fragment {
     	
 		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
 		Query q = state.getQuery();
-		DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
+		DistrictActivity d = (DistrictActivity) this.getActivity();
 		String districtId = d.getDistrictId();
 		Integer distId = Integer.parseInt(districtId);
 		
@@ -164,7 +167,7 @@ public class CoverageFragment extends Fragment {
 	// for the by-subdistrict map function
 	@JavascriptInterface
 	public int getDistrict() {
-		DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
+		DistrictActivity d = (DistrictActivity) this.getActivity();
 		String districtId = d.getDistrictId();
 		Integer distId = Integer.parseInt(districtId);
 		
@@ -244,7 +247,8 @@ public class CoverageFragment extends Fragment {
 	    	private String subName;
 	    	private long coverage;
 	    	
-	        public void run() {
+	        @Override
+			public void run() {
 	        	CoverageFragment.this.showStockView(true, subId, subName, coverage);
 	        }
 	        
@@ -285,7 +289,8 @@ public class CoverageFragment extends Fragment {
 	    	private String vName;
 	    	private long coverage;
 	    	
-	        public void run() {
+	        @Override
+			public void run() {
 	        	CoverageFragment.this.showDetail(true, vId, vName, coverage);
 	        }
 	        

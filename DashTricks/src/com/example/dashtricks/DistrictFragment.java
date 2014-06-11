@@ -33,7 +33,7 @@ public class DistrictFragment extends Fragment {
 	    	View rootView = inflater.inflate(R.layout.fragment_district, container, false);
 	        
 	        
-			DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
+			DistrictActivity d = (DistrictActivity) this.getActivity();
 			String districtId = d.getDistrictId();
 			Integer distId = Integer.parseInt(districtId);
 			
@@ -98,7 +98,7 @@ public class DistrictFragment extends Fragment {
 		
 		@JavascriptInterface
 		public int getDistrict() {
-			DistrictActivityDr d = (DistrictActivityDr) this.getActivity();
+			DistrictActivity d = (DistrictActivity) this.getActivity();
 			String districtId = d.getDistrictId();
 			Integer distId = Integer.parseInt(districtId);
 			
