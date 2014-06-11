@@ -23,6 +23,13 @@
       stroke-linejoin: round;
     }
 
+    .clickedMesh {
+      fill: none;
+      stroke: black;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
   </style>
 
   <script src="file:///android_asset/d3.js" charset="utf-8"></script>
@@ -156,7 +163,17 @@
   }
 
   function clicked(d) {
-    android.registerClick(d.properties.ID_3);
+    g.selectAll(".clickedMesh").remove();
+
+    // add mesh for clicked subdistrict
+    g.append("path")
+      .datum(topojson.mesh(tza, subdistricts[distID], function(a, b) { 
+        return a.properties.ID_3 == d.properties.ID_3 || b.properties.ID_3 == d.properties.ID_3; 
+      }))
+      .attr("class", "clickedMesh")
+      .attr("d", path);
+
+    // android.registerClick(d.properties.ID_3);
   }
 
   </script>

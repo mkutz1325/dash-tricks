@@ -23,6 +23,13 @@
       stroke-linejoin: round;
     }
 
+    .clickedMesh {
+      fill: none;
+      stroke: black;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
     .bar {
       height: 20px;
       float: left;
@@ -220,6 +227,16 @@
                 subDistrictName: d.properties.NAME_3,
                 coverage: coverageByID[d.properties.ID_3]
               };
+
+    g.selectAll(".clickedMesh").remove();
+
+      // add mesh for clicked subdistrict
+      g.append("path")
+        .datum(topojson.mesh(tza, subdistricts[distID], function(a, b) { 
+          return a.properties.ID_3 == d.properties.ID_3 || b.properties.ID_3 == d.properties.ID_3; 
+        }))
+        .attr("class", "clickedMesh")
+        .attr("d", path);
 
     android.registerMapClick(JSON.stringify(toReturn));
   }
