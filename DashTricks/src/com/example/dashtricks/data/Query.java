@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -60,29 +62,41 @@ public class Query {
 	HashMap<String, String > subCoverMonth = new HashMap<String, String>();
 	
 	HashMap<String, String> getVaccCoverDist = new HashMap<String, String>();
+	
+	String vacWastage = "";
 	SQLiteQueryBuilder query = new SQLiteQueryBuilder();
 	
 	
-	/*public String getAcount(){
-		 Cursor cur = database.rawQuery("Select count(*)" + " "
-		+ "from " + AggVaccineTable.TABLENAME,	new String[]{});
+	/**
+	 * get all vaccine wasted percentage 
+	 * 
+	 * @return {"VaccineWastage": [{"vaccine": "", "id": x, "wastage":xx},{},{}]}
+	 */
+	public String getStockWastage(){
+		Log.v("jian", "Start");
+		if(vacWastage.length() > 0){
+			return vacWastage;
+		}
+		String res = "{\"VaccineWastage\": [";
 
-	String res = "";
-	
-	cur.moveToFirst();
-	List<String> list = new ArrayList<String>();
-	while(!cur.isAfterLast()){
-	String temp = "{" + cur.getInt(0) + "}";  
-	list.add(temp);
-	cur.moveToNext();
-}
-cur.close();
-res += buildString(list) + "]}";
-Log.v("jian", "end");
-allDistrict = res;
-return res;
+		query.setTables(VaccineTable.TABLENAME);
+		String[] column = {VaccineTable.TABLENAME + "." + VaccineTable.NAME, VaccineTable.TABLENAME + "." + VaccineTable.ID, VaccineTable.TABLENAME + "." + VaccineTable.WASTED};
+
+		Cursor cur = query.query(database, column, null, null, null, null, null);
+		cur.moveToFirst();
+		List<String> list = new ArrayList<String>();
+		while(!cur.isAfterLast()){
+			String temp = "{ \"vaccine\" : \"" + cur.getString(0) + "\", \"id\" : " + cur.getInt(1) + ", \"wastage\" : " + cur.getInt(2) + "}";  
+			list.add(temp);
+			cur.moveToNext();
+		}
+		cur.close();
+		res += buildString(list) + "]}";
+		Log.v("jian", "end");
+		vacWastage = res;
+		return res;
 		
-	}*/
+	}
 	
 	/**
 	 * get  all districts name/id/ coor
