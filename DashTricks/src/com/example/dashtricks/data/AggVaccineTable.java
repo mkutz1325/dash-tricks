@@ -15,4 +15,5 @@ public class AggVaccineTable {
 	public static final String COVERAGE = "coverage";
 	public static final String RECEIVED = "received";
 	public static final String UESED = "used";
+	public static final String WASTED = "wasted_percentage";
 }

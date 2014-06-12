@@ -12,7 +12,6 @@ public class VaccineTable {
 	public static final String ID = "id";
 	public static final String DOSE_NO = "number_dose_person";
 	public static final String DOSE_VILE = "dose_per_vile";
-	public static final String WASTED = "wasted_percentage";
 	public static final String SPACE = "dose_space";
 
 }

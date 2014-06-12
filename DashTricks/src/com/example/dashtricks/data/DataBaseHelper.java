@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.database.SQLException;
@@ -50,8 +51,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 	//Vaccine model table
 	private static final String VACCINE = "CREATE TABLE " + VaccineTable.TABLENAME + "(" + VaccineTable.ID + " "
 			+ TEXT_TYPE_INT + " PRIMARY KEY, " + VaccineTable.NAME + " " + TEXT_TYPE_TEXT + ", " + VaccineTable.DOSE_NO+ " " +
-			TEXT_TYPE_INT + ", " + VaccineTable.DOSE_VILE + " " + TEXT_TYPE_INT +", " +VaccineTable.WASTED + " " + TEXT_TYPE_INT
-			+ ", " + VaccineTable.SPACE + " " + TEXT_TYPE_INT + ")";
+			TEXT_TYPE_INT + ", " + VaccineTable.DOSE_VILE + " " + TEXT_TYPE_INT +", " + VaccineTable.SPACE + " " + TEXT_TYPE_INT + ")";
 	
 	//Aggregate capacity data model
 	private static final String AGGFRIDGE= "CREATE TABLE " + AggCapacityTable.TABLENAME + "(" + AggCapacityTable.FACILITY_ID + " " + TEXT_TYPE_INT + ", " + AggCapacityTable.MONTH+ " " +
@@ -63,13 +63,13 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 			+ TEXT_TYPE_INT + ", " + AggVaccineTable.FACILITY_ID + " " + TEXT_TYPE_INT + ", " + AggCapacityTable.MONTH+ " " +
 			TEXT_TYPE_TEXT + ", " + AggVaccineTable.RECEIVED + " " + TEXT_TYPE_INT+ ", " + AggVaccineTable.UESED + " " + TEXT_TYPE_INT +", "
 			+ AggVaccineTable.STOCK_LEVEL + "  " + TEXT_TYPE_INT + ", " +  AggVaccineTable.STOCK_OUT + " " + TEXT_TYPE_INT + ", "
-			+ AggVaccineTable.COVERAGE + " " + TEXT_TYPE_INT + ", PRIMARY KEY (" + AggVaccineTable.VACCINE_ID + ", " + AggVaccineTable.FACILITY_ID
-			+ ", " + AggVaccineTable.MONTH + "))";
+			+ AggVaccineTable.COVERAGE + " " + TEXT_TYPE_INT + ", " + AggVaccineTable.WASTED + " " + TEXT_TYPE_INT + 
+			", PRIMARY KEY (" + AggVaccineTable.VACCINE_ID + ", " + AggVaccineTable.FACILITY_ID + ", " + AggVaccineTable.MONTH + "))";
 	
 	
 	private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS ";
 	
-	public static final int DATABASE_VERSION = 44;//increment the database version when change the database schema
+	public static final int DATABASE_VERSION = 45;//increment the database version when change the database schema
 	//public static final String DATABASE_NAME = "VaccCover.db";
 	public static final String DATABASE_NAME = "DashTrick";
 	private Context context;
@@ -116,7 +116,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		//load vaccine model
 		db.execSQL(VACCINE);
 		column = VaccineTable.ID + ", " + VaccineTable.NAME + ", " + VaccineTable.DOSE_NO + ", " + VaccineTable.DOSE_VILE + 
-				", " + VaccineTable.WASTED + ", " + VaccineTable.SPACE;
+				", " + VaccineTable.SPACE;
 		loadData("vaccine.csv", column, db, VaccineTable.TABLENAME);
 		
 		//load aggregate fridge data model
@@ -128,7 +128,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 		//load aggregated vaccine data model
 		db.execSQL(AGGVACC);
 		column = AggVaccineTable.VACCINE_ID + ", " + AggVaccineTable.FACILITY_ID + ", " + AggVaccineTable.MONTH + ", " + AggVaccineTable.RECEIVED + ","
-				 + AggVaccineTable.UESED + ", " + AggVaccineTable.STOCK_LEVEL + ", " + AggVaccineTable.STOCK_OUT + ", " + AggVaccineTable.COVERAGE;
+				 + AggVaccineTable.UESED + ", " + AggVaccineTable.STOCK_LEVEL + ", " + AggVaccineTable.STOCK_OUT + ", " + AggVaccineTable.COVERAGE + ","
+				 + AggVaccineTable.WASTED;
 		loadData("aggregated_Facility_Vaccine_Data.csv", column, db, AggVaccineTable.TABLENAME);
 
 

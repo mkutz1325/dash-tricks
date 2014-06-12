@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
@@ -63,39 +62,53 @@ public class Query {
 	
 	HashMap<String, String> getVaccCoverDist = new HashMap<String, String>();
 	
-	String vacWastage = "";
+	HashMap<Integer, String> getWastage = new HashMap<Integer, String>();
+	
 	SQLiteQueryBuilder query = new SQLiteQueryBuilder();
+	
 	
 	
 	/**
 	 * get all vaccine wasted percentage 
 	 * 
-	 * @return {"VaccineWastage": [{"vaccine": "", "id": x, "wastage":xx},{},{}]}
+	 * @return {"districtName":"", "districtID": xx, "wastage": [{"vaccineid": x, "name ": "", "wastage":xx},{},{}]}
 	 */
-	public String getStockWastage(){
+	public String getStockWastage(int distID){
 		Log.v("jian", "Start");
-		if(vacWastage.length() > 0){
-			return vacWastage;
+		
+		if(getWastage.containsKey(distID)){
+			return getWastage.get(distID);
 		}
-		String res = "{\"VaccineWastage\": [";
+		
 
-		query.setTables(VaccineTable.TABLENAME);
-		String[] column = {VaccineTable.TABLENAME + "." + VaccineTable.NAME, VaccineTable.TABLENAME + "." + VaccineTable.ID, VaccineTable.TABLENAME + "." + VaccineTable.WASTED};
+		String distName = "";
 
-		Cursor cur = query.query(database, column, null, null, null, null, null);
-		cur.moveToFirst();
+		query.setTables(DistrictTable.TABLENAME + " as d," + SubDistrictTable.TABLENAME + " as s, " +  FacilityTable.TABLENAME + " as f, "
+				+ AggVaccineTable.TABLENAME + " as a, " + VaccineTable.TABLENAME + " as v ");
+		String[] column = { "d." + DistrictTable.NAME, "v." + VaccineTable.ID, "v." + VaccineTable.NAME, "avg(a." + AggVaccineTable.WASTED + ") "};
+		
+		String where = "d." + DistrictTable.ID + " = " + distID + " and s." + SubDistrictTable.ID + "= f." + FacilityTable.SUBID + 
+					" and f." + FacilityTable.ID + " = a." + AggVaccineTable.FACILITY_ID + " and a." + 
+					AggVaccineTable.VACCINE_ID + "= v." + VaccineTable.ID + " and s." + SubDistrictTable.DISTRICTID + " = " + distID;
+		String groupby = "v." + VaccineTable.NAME + ", v." + VaccineTable.ID + ", d." + DistrictTable.NAME;
+
+		Cursor cur = query.query(database, column, where, null, groupby, null, null);
+		
 		List<String> list = new ArrayList<String>();
+		cur.moveToFirst();
 		while(!cur.isAfterLast()){
-			String temp = "{ \"vaccine\" : \"" + cur.getString(0) + "\", \"id\" : " + cur.getInt(1) + ", \"wastage\" : " + cur.getInt(2) + "}";  
-			list.add(temp);
+			distName = cur.getString(0);
+			String temp = "{ \"VaccineID\":" + cur.getInt(1) + ", \"VaccineName\" : \"" + cur.getString(2) + "\", \"Wasted\" : " + cur.getInt(3) + "}";
+			list.add(temp);			
+			//Log.e("Query.java ", temp);
 			cur.moveToNext();
 		}
 		cur.close();
+		String res = "{\"DistrictName\": \"" + distName + "\", \"DistrictID\": " + distID + ", \"Wastage\": [";
 		res += buildString(list) + "]}";
-		Log.v("jian", "end");
-		vacWastage = res;
+		Log.v("jian", "End");
+		getWastage.put(distID, res);
 		return res;
-		
 	}
 	
 	/**
