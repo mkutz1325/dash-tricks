@@ -3,27 +3,20 @@ dash-tricks
 
 A collection of health indicators and tools for District Immunization Managers in Tanzania.
 
-Updated 4/25/14
----------------
+Build Instructions
+==================
 
----
+Using Android: 4.4.2
+Installed with ADT Eclipse bundle
 
-Current Status
-==============
+Eclipse should build the project automatically
 
-Still working on individual goals.
-Should begin to think about integrating each part.
+The first time the app launches there is about a 5 min
+load time as the csv data files are parsed and inserted
+into the SQL database on the device
 
-
----
-
-Plans
-=====
-
-Bryan: Implement graphs, add animations, use js object to get data instead of hard coding.
-* What is needed? : Better way to implement multiple trend lines on same graph, investicgation into animations, figure out a way to zoom a map to a specific area, colorization and labeling of the map, js integration with android data accessor.
-
----
+After that subsequent launches should have minimal load time
+and subsequent re-load/launches from eclipse should be much faster
 
 
 
