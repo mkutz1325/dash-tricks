@@ -31,14 +31,10 @@ public class DistrictListActivity extends FragmentActivity
 		state.setQuery(q);
 		
 		setContentView(R.layout.activity_district_list);
-		//getLoaderManager().initLoader(0, null, this);
-
-
-		//Intent intent = getIntent();
 	}
 
 	/**
-	 * Callback method from {@link MetricListFragment.Callbacks} indicating that
+	 * Callback method from {@link DistrictListFragment.Callbacks} indicating that
 	 * the item with the given ID was selected.
 	 */
 	@Override
@@ -51,19 +47,14 @@ public class DistrictListActivity extends FragmentActivity
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onLoaderReset(Loader<Cursor> loader) {
-		// TODO Auto-generated method stub
-		
 	}
 }

@@ -11,10 +11,7 @@ import com.example.dashtricks.data.DistrictList;
 import com.example.dashtricks.data.Query;
 
 /**
- * A list fragment representing a list of Metrics. This fragment also supports
- * tablet devices by allowing list items to be given an 'activated' state upon
- * selection. This helps indicate which item is currently being viewed in a
- * {@link MetricDetailFragment}.
+ * A list fragment representing a list of Districts. 
  * <p>
  * Activities containing this fragment MUST implement the {@link Callbacks}
  * interface.
@@ -66,11 +63,10 @@ public class DistrictListFragment extends ListFragment {
 		super.onCreate(savedInstanceState);
 
 		// get the needed data to create the district list
-		// TODO this should happen in a different thread
 		GlobalState state = (GlobalState) this.getActivity().getApplicationContext();
 		Query q = state.getQuery();
 		String districts = q.getAllDistricts();
-		DistrictList districtList = new DistrictList(districts);
+		new DistrictList(districts);
 
 		setListAdapter(new ArrayAdapter<DistrictList.District>(getActivity(),
 				android.R.layout.simple_list_item_activated_1,
@@ -80,13 +76,6 @@ public class DistrictListFragment extends ListFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-
-		// Restore the previously serialized activated item position.
-/*		if (savedInstanceState != null
-				&& savedInstanceState.containsKey(STATE_ACTIVATED_POSITION)) {
-			setActivatedPosition(savedInstanceState
-					.getInt(STATE_ACTIVATED_POSITION));
-		}*/
 	}
 
 	@Override
